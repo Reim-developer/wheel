@@ -16,7 +16,7 @@ void test_positive_numbers() {
 
     const auto actual_number = number.value();
     const auto error_message = format("expected value {}, but found {} ",variable_number, actual_number);
-    assert(number.value() == variable_number, error_message.c_str());
+    internal_assert(number.value() == variable_number, error_message.c_str());
 
     cout << "<variable_number>: " << variable_number << "\n";
     cout << "<number.value()>: " << actual_number << "\n";
@@ -33,7 +33,7 @@ void test_negative_numbers() {
         "expected negative number {}, but found {} ", 
         negative_number, actual_negative_number
     );
-    assert(number.value() == -100, error_message.c_str());
+    internal_assert(number.value() == -100, error_message.c_str());
 
     cout << "<expected_negative_number>: " << negative_number << "\n";
     cout << "<actual_negative_number>: " << actual_negative_number << "\n";
@@ -45,8 +45,8 @@ void test_zero_value() {
     IntType number(zero_number);
     const auto actual = number.value();
 
-    assert(actual == 0, format("Expected {}, but found {}", zero_number, actual));
-    assert(static_cast<bool>(actual) == false, format("actual {} should be false", actual));
+    internal_assert(actual == 0, format("Expected {}, but found {}", zero_number, actual));
+    internal_assert(static_cast<bool>(actual) == false, format("actual {} should be false", actual));
 
     cout << "<zero_number>: " << zero_number << "\n";
     cout << "<actual>: " << actual << "\n";
@@ -57,7 +57,7 @@ void test_int_boundaries() {
 
     IntType max_int_type(INT_MAX);
 
-    assert(
+    internal_assert(
         max_int_type.value() == INT_MAX, 
         format("Expected 'INT_MAX' {}, but found {}", 
             INT_MAX, max_int_type.value())
@@ -65,7 +65,7 @@ void test_int_boundaries() {
 
     IntType min_int_type(INT_MIN);
 
-    assert(
+    internal_assert(
         min_int_type.value() == INT_MIN,
         format("Expected 'INT_MIN' {}, but found {}", 
             INT_MIN, min_int_type.value())
@@ -84,12 +84,12 @@ void test_assignment_operator() {
     IntType number_a(integer_a);
     IntType number_b(integer_b);
 
-    assert(number_a.value() == integer_a, format(
+    internal_assert(number_a.value() == integer_a, format(
         "Intial 'number_a' mismatch, expect {}, but found {}",
         integer_a, number_a.value()
     ));
 
-    assert(number_b.value() == integer_b, format(
+    internal_assert(number_b.value() == integer_b, format(
         "Intial 'number_b' mismatch, expect {}, but found {}",
         integer_b, number_b.value()
     ));
@@ -99,11 +99,11 @@ void test_assignment_operator() {
 
     number_b = number_a;
 
-    assert(number_b.value() == number_a.value(), format(
+    internal_assert(number_b.value() == number_a.value(), format(
         "'number_b' should be {}, but found {}",
         number_a.value(), number_b.value()
     ));
-    assert(number_a.value() == integer_a, format(
+    internal_assert(number_a.value() == integer_a, format(
         "'number_a' was modified during assignment, expected {}, but found {}",
         integer_a, number_a.value()
     ));
@@ -121,7 +121,7 @@ void test_self_assigment() {
     IntType &ref_to_a = number_a;
     ref_to_a = ref_to_a;
 
-    assert(number_a.value() == variable_a, format(
+    internal_assert(number_a.value() == variable_a, format(
         "Self-assigment corrupted value, expected {}, but found {}",
         variable_a, number_a.value()
     ));
@@ -147,13 +147,13 @@ void test_raw_assigment() {
     cout << "[After Raw Assigment] <variable_raw()>: " << variable_raw << "\n";
     cout << "[After Raw Assigment] <number_value()>: " << number.value() << "\n";
 
-    assert(
+    internal_assert(
         number.value() != variable, format(
             "Raw assigment failed, expected {}, but found {}",
             variable_raw, number.value())
     );
 
-    assert(number.value() == variable_raw, format(
+    internal_assert(number.value() == variable_raw, format(
         "Raw assigment failed, expected {}, but found {}",
         variable_raw, number.value())
     );
