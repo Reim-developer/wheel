@@ -11,7 +11,7 @@ using std::abort;
     #pragma warning(disable: 4806)
 #endif 
 
-#define assert(condition, message) \
+#define internal_assert(condition, message) \
     do { \
         if (!(condition)) { \
             cerr << "\n"; \
