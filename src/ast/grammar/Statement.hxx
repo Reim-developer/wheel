@@ -15,33 +15,34 @@ using tao::pegtl::opt;
 using tao::pegtl::sor;
 using tao::pegtl::eof;
 using tao::pegtl::one;
+using tao::pegtl::not_at;
 
-using wheel::ast::grammar::Whitespace;
 using wheel::ast::grammar::AssignOperator;
 using wheel::ast::grammar::Identifier;
 using wheel::ast::grammar::IntKeyword;
+using wheel::ast::grammar::Space;
 
 namespace wheel::ast::grammar {
     template <typename Rule>
-    using ignore_whitespace = seq<Rule, star<Whitespace>>;
+    using ignore_space = seq<Rule, star<Space>>;
 
     struct DeclarationStatement : seq
         <
-            ignore_whitespace<IntKeyword>,
-            ignore_whitespace<Identifier>,
-            ignore_whitespace<AssignOperator>,
-            ignore_whitespace<Int>
+            ignore_space<IntKeyword>,
+            ignore_space<Identifier>,
+            ignore_space<AssignOperator>,
+            ignore_space<Int>
         >
     {};
 
     struct Statement : seq 
         <   
-            star<Whitespace>,
-            ignore_whitespace<DeclarationStatement>,
+            if_must< not_at<Space> >,
+            ignore_space<DeclarationStatement>,
             sor
             <
-                ignore_whitespace<one<';'>>,
-                seq<one<'\n'>, star<Whitespace>>, 
+                ignore_space<one<';'>>,
+                seq<one<'\n'>, star<Space>>, 
                 eof
             >
         >
