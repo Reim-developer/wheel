@@ -8,6 +8,7 @@ add_executable(
     ${PROJECT_NAME}
     src/main.cxx
     src/ast/types/int_type.cxx
+    src/ast/nodes/node_ast.cxx
 )
 
 enable_testing()
