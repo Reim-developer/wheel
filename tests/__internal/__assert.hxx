@@ -3,13 +3,32 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cstring>
 
 using std::cerr;
+using std::cout;
+using std::boolalpha;
 using std::abort;
 
 #if defined(_MSC_VER)
     #pragma warning(disable: 4806)
 #endif 
+
+#if defined(_WIN32)
+    #define BASE_NAME(path) ((strrchr(path, '\\')) ? strrchr(path, '\\') + 1 : path)
+
+#else
+    #define BASE_NAME(path) ((strrchr(path, '/')) ? strrchr(path, '/') + 1 : path)
+
+#endif 
+
+#define DEBUG_OUTPUT(content) \
+    do { \
+        const char * file_name = BASE_NAME(__FILE__); \
+        cout << boolalpha; \
+        cout << "[" << __LINE__ << ":" << file_name << "] " \
+        << content << "\n"; \
+    } while(0)
 
 #define internal_assert(condition, message) \
     do { \
