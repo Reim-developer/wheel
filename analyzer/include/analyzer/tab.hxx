@@ -1,10 +1,14 @@
 #if !defined(TAB_HXX)
 #define TAB_HXX
 #include <string>
+#include <string_view>
 #include <vector>
+#include "analyzer/error.hxx"
 
 using std::string;
 using std::vector;
+using std::string_view;
+using analyzer::Diagnostic;
 
 namespace analyzer {
     enum class IndentType {
@@ -13,21 +17,9 @@ namespace analyzer {
         NEWLINE
     };
 
-    struct IndentError {
-        enum Type {
-            LEADING_WHITE_SPACE_ERROR,
-            LEADING_TAB_ERROR,
-            MIXED_INDENTATION_ERROR,
-        } error_type;
-
-        string messsage;
-        size_t line;
-        size_t column;
-    };
-
     struct IndentResult {
         vector<IndentType> indents;
-        vector<IndentError> errors;
+        vector<Diagnostic> diagnostics;
     };
 
     class TabAnalyzer {
@@ -35,7 +27,9 @@ namespace analyzer {
             static IndentResult analyzer(
                 const char* start,
                 const char* end,
-                size_t line
+                size_t line, 
+                string_view source_line,
+                string_view file_name
             );
     };
 }
