@@ -11,7 +11,7 @@ using std::format;
 using std::cout;
 
 void test_leading_space_error() {
-    cout << "'test_leading_space_error'\n";
+    DEBUG_OUTPUT("'test_leading_space_error'");
 
     const char *source = " ";
 
@@ -32,15 +32,19 @@ void test_leading_space_error() {
             static_cast<int>(expected_error_type), 
             static_cast<int>(error_type))
     );
-
-    cout << boolalpha;
-    cout << "'<has_error_empty>:' " << static_cast<bool>(has_success) << "\n";
-    cout << "'<error_message>: '" << result.errors[0].messsage << "\n";
-    cout << "'<error_type>: '" << error_type << "\n";
+    DEBUG_OUTPUT(format(
+        "<has_error_empty>: {}", has_success
+    ));
+    DEBUG_OUTPUT(format(
+        "<error_message>: {}", result.errors[0].messsage
+    ));
+    DEBUG_OUTPUT(format(
+        "<error_type>: {}", static_cast<int>(error_type)
+    ));
 }
 
 void test_leading_tab_error() {
-    cout << " 'test_leading_tab_error'\n";
+    DEBUG_OUTPUT("'test_leading_tab_error'");
 
     const char *source = "\t";
 
@@ -63,14 +67,19 @@ void test_leading_tab_error() {
             static_cast<int>(error_type))
     );
 
-    cout << boolalpha;
-    cout << "'<has_error_empty>:' " << static_cast<bool>(has_success) << "\n";
-    cout << "'<error_message>: '" << result.errors[0].messsage << "\n";
-    cout << "'<error_type>: '" << error_type << "\n";
+    DEBUG_OUTPUT(format(
+        "<error_message>: {}", result.errors[0].messsage
+    ));
+    DEBUG_OUTPUT(format(
+        "<error_type>: {}", static_cast<int>(error_type)
+    ));
+    DEBUG_OUTPUT(format(
+        "<has_error_empty>: ", has_success
+    ));
 }
 
 void test_mixed_indent_error() {
-    cout << "'test_mixed_indent_error'\n";
+    DEBUG_OUTPUT("'test_mixed_indent_error'");
     const char *source = " \t";
 
     auto result = TabAnalyzer::analyzer(source, source + 2, 1);
@@ -96,14 +105,17 @@ void test_mixed_indent_error() {
     );
 
     for (auto error : errors) {
-        cout << boolalpha;
-        cout << "<has_error_empty>: " << has_success << "\n";
-        cout << "<error_message>: " << error.messsage << "\n";
+        DEBUG_OUTPUT(format(
+            "<has_error_empty>: {}", has_success
+        ));
+        DEBUG_OUTPUT(format(
+            "<error_message>: {}", error.messsage
+        ));
     }
 }
 
 void test_newline_success_ok() {
-    cout << "'test_newline_success_ok'\n";
+    DEBUG_OUTPUT("'test_newline_success_ok'");
 
     const char *source = "\n";
     auto result = TabAnalyzer::analyzer(source, source + 1, 1);
@@ -123,14 +135,20 @@ void test_newline_success_ok() {
         static_cast<int>(IndentType::NEWLINE), 
         static_cast<int>(indent_type)
     ));
-    cout << boolalpha;
-    cout << "<has_error_empty>: " << has_error_empty << "\n";
-    cout << "<has_indents_empty>: " << has_indents_empty << "\n";
-    cout << "<indent_type>: " << static_cast<int>(indent_type) << "\n";
+
+    DEBUG_OUTPUT(format(
+        "<has_error_empty>: {}", has_error_empty
+    ));
+    DEBUG_OUTPUT(format(
+        "<has_indents_empty>: {}", has_indents_empty
+    ));
+    DEBUG_OUTPUT(format(
+        "<indent_type>: {}", static_cast<int>(indent_type)
+    ));
 }
 
 void test_no_leading_whitespace_success_ok() {
-    cout << "'test_no_leading_whitespace_success_ok'\n";
+    DEBUG_OUTPUT("'test_no_leading_whitespace_success_ok'");
 
     const char *source = "pseudo_code...";
     auto result = TabAnalyzer::analyzer(source, source + 0, 1);
@@ -147,9 +165,12 @@ void test_no_leading_whitespace_success_ok() {
         true, has_empty_indents
     ));
 
-    cout << boolalpha;
-    cout << "<has_empty_errors>: " << has_empty_errors << "\n";
-    cout << "<has_empty_indents>: " << has_empty_indents << "\n";
+    DEBUG_OUTPUT(format(
+        "<has_empty_errors>: {}", has_empty_errors
+    ));
+    DEBUG_OUTPUT(format(
+        "<has_empty_indents>: {}", has_empty_indents
+    ));
 }
 
 int main() {
