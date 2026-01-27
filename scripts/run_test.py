@@ -10,8 +10,7 @@ from subprocess	import run
 
 class __CMakeBuildTarget(StrEnum):
 	ALLOCATOR_TEST 		= "allocator_test"
-	INT_TYPE_TEST  		= "int_type_test"
-	INT_GRAMMAR_TEST	= "int_grammar_test"
+	TAB_ANALYZER_TEST   = "tab_analyzer_test"
 
 class __TargetConfig(StrEnum):
 	DEBUG = "Debug"
@@ -92,9 +91,8 @@ def __switch_working_dir() -> None:
 def main() -> None:
 	__switch_working_dir()
 	__gen_cmake()
-	__cmake_build_target(__CMakeBuildTarget.ALLOCATOR_TEST, __TargetConfig.DEBUG)
-	__cmake_build_target(__CMakeBuildTarget.INT_TYPE_TEST, __TargetConfig.DEBUG)
-	__cmake_build_target(__CMakeBuildTarget.INT_GRAMMAR_TEST, __TargetConfig.DEBUG)
+	__cmake_build_target(__CMakeBuildTarget.ALLOCATOR_TEST, __TargetConfig.DEBUG)	
+	__cmake_build_target(__CMakeBuildTarget.TAB_ANALYZER_TEST, __TargetConfig.DEBUG)
 	__run_test(config = __TargetConfig.DEBUG)
 
 main()
