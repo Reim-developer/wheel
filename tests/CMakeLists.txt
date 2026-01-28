@@ -11,8 +11,7 @@ function (setup_wheel_test test_name test_source)
         ${test_name}
         PRIVATE
             ${CMAKE_SOURCE_DIR}/src
-            ${CMAKE_SOURCE_DIR}/tests
-            ${CMAKE_SOURCE_DIR}/vendor   
+            ${CMAKE_SOURCE_DIR}/tests  
     )
     set_target_properties(
         ${test_name} PROPERTIES EXCLUDE_FROM_ALL ON)
@@ -21,5 +20,6 @@ function (setup_wheel_test test_name test_source)
     add_test(NAME ${test_name} COMMAND ${test_name})
 endfunction()
 
+add_subdirectory(lexer_tests)
 add_subdirectory(analyzer_tests)
 setup_wheel_test(allocator_test allocator_test.cxx)
