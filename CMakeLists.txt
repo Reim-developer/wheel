@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(analyzer)
+add_subdirectory(lexer)
 add_executable(
     ${PROJECT_NAME}
     src/main.cxx
@@ -20,4 +21,4 @@ target_include_directories(
     ${CMAKE_SOURCE_DIR}/src
 )
 
-target_link_directories(${PROJECT_NAME} PRIVATE analyzer)
+target_link_directories(${PROJECT_NAME} PRIVATE lexer analyzer)
