@@ -11,6 +11,7 @@ from subprocess	import run
 class __CMakeBuildTarget(StrEnum):
 	ALLOCATOR_TEST 		= "allocator_test"
 	TAB_ANALYZER_TEST   = "tab_analyzer_test"
+	LEXER_EOF_TEST 	 	= "lexer_eof_test"
 
 class __TargetConfig(StrEnum):
 	DEBUG = "Debug"
@@ -56,7 +57,7 @@ def __gen_cmake() -> None:
 			__cerr(f"Cannot generate cmake, error: {error}")
 			__die(code = __ExitCode.GENERATE_CMAKE_CACHE_FAILED)
 
-def __cmake_build_target(target: __CMakeBuildTarget, config: __TargetConfig) -> None:
+def __cmake_build_target(target: str, config: __TargetConfig) -> None:
 	try:
 		run(args = ["cmake", "--build", ".", "--target", target, "--config", config])
 
@@ -91,8 +92,11 @@ def __switch_working_dir() -> None:
 def main() -> None:
 	__switch_working_dir()
 	__gen_cmake()
-	__cmake_build_target(__CMakeBuildTarget.ALLOCATOR_TEST, __TargetConfig.DEBUG)	
-	__cmake_build_target(__CMakeBuildTarget.TAB_ANALYZER_TEST, __TargetConfig.DEBUG)
+	for target in __CMakeBuildTarget:
+		print(f"Start testing {target.value}")
+		
+		__cmake_build_target(target.value, __TargetConfig.DEBUG)
+
 	__run_test(config = __TargetConfig.DEBUG)
 
 main()
