@@ -1,0 +1,98 @@
+#include "__lexer_test_helper/__helper.hxx"
+#include <lexer/lexer.hxx>
+
+using lexer::Lexer;
+using lexer::Kind;
+
+TEST(test_lf_newline) 
+    const char* source = "\n";
+    Lexer lexer(source);
+    const auto token  = lexer.next_token();
+
+    Verify<Kind::NEWLINE>().token_str_eq_to(token, "\n", 1);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(token, 2, 1, 0);
+DONE 
+
+TEST(test_crlf_newline)
+    const char* source = "\r\n";
+    Lexer lexer(source);
+    const auto token  = lexer.next_token();
+
+    Verify<Kind::NEWLINE>().token_str_eq_to(token, "\r\n", 2);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(token, 2, 1, 0);
+DONE
+
+TEST(test_cr_newline)
+    const char* source = "\r";
+    Lexer lexer(source);
+    const auto token  = lexer.next_token();
+
+    Verify<Kind::NEWLINE>().token_str_eq_to(token, "\r", 1);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(token, 2, 1, 0);
+DONE
+
+TEST(test_multilpe_new_lines)
+    const char* source = "\n\n\n";
+    Lexer lexer(source);
+    
+    auto t1 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+    
+    auto t2 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 1);
+
+    auto t3 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 2);
+DONE 
+
+TEST(test_multilpe_new_lines_clrf)
+    const char* source = "\r\n\r\n\r\n";
+    Lexer lexer(source);
+    
+    auto t1 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+    
+    auto t2 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 2);
+
+    auto t3 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 4);
+DONE
+
+TEST(test_multilpe_new_cr)
+    const char* source = "\r\r\r";
+    Lexer lexer(source);
+
+    const auto t1  = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+
+    const auto t2 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 1);
+
+    const auto t3 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 2);
+DONE
+
+TEST(test_multilpe_new_line_mixed)
+    const char* source = "\n\r\r\n";
+    Lexer lexer(source);
+
+    const auto t1  = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+
+    const auto t2 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 1);
+
+    const auto t3 = lexer.next_token();
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 2);
+DONE 
+
+TEST_ENTRY
+    RUN_TEST(test_lf_newline)
+    RUN_TEST(test_crlf_newline)
+    RUN_TEST(test_cr_newline)
+    RUN_TEST(test_multilpe_new_lines)
+    RUN_TEST(test_multilpe_new_lines_clrf)
+    RUN_TEST(test_multilpe_new_cr)
+    RUN_TEST(test_multilpe_new_line_mixed);
+ENTRY_END
