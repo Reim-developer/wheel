@@ -13,6 +13,10 @@ function (setup_wheel_test test_name test_source)
             ${CMAKE_SOURCE_DIR}/src
             ${CMAKE_SOURCE_DIR}/tests  
     )
+
+    target_link_libraries(${test_name} PRIVATE lexer)
+    set_property(TARGET ${test_name} PROPERTY CXX_STANDARD 20)
+
     set_target_properties(
         ${test_name} PROPERTIES EXCLUDE_FROM_ALL ON)
     set_target_properties(
