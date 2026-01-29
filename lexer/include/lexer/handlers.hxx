@@ -1,5 +1,5 @@
 #if !defined(HANDLERS_HXX)
-
+#define HANDLERs_HXX
 #include "cursor.hxx"
 #include "token.hxx"
 #include "utils.hxx"
