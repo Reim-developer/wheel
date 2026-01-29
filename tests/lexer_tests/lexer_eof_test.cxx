@@ -9,8 +9,7 @@ using lexer::TokenKind;
 using lexer::to_string;
 using std::format;
 
-void test_eof_success_with_empty_input() {
-    DEBUG_OUTPUT(format("'test_eof_success_with_empty_input'"));
+TEST(test_eof_success_with_empty_input)
     const char* source = "";
 
     Lexer lexer(source);
@@ -19,9 +18,9 @@ void test_eof_success_with_empty_input() {
     Verify<lexer::TokenKind::EOF_>{}.token_as(lexer::TokenKind::EOF_);
     Verify<lexer::TokenKind::EOF_>{}.token_str_eq_to(token, "", 0);
     Verify<lexer::TokenKind::EOF_>{}.token_metadata_eq_to(token, 1, 1, 0);
-}
 
-int main() {
-    test_eof_success_with_empty_input();
-    return 0;
-}
+DONE
+
+TEST_ENTRY
+    RUN_TEST(test_eof_success_with_empty_input)
+ENTRY_END
