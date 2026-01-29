@@ -1,4 +1,5 @@
 #if !defined(LEXER_HXX)
+#define LEXER_HXX
 
 #include "token.hxx"
 #include "cursor.hxx"
