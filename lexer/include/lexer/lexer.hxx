@@ -6,6 +6,7 @@
 #include "utils.hxx"
 #include "handlers.hxx"
 #include "aliases.hxx"
+#include "properties.hxx"
 
 namespace lexer {
     class Lexer {
@@ -14,19 +15,24 @@ namespace lexer {
             SourceLocation  source_location;
 
             void update_location(char character) {
-                if (character == '\n') {
+                if(lexer::is_newline_like(character)) {
                     source_location.line++;
                     source_location.column = 1;
                 } else {
-                    source_location.column++;   
+                    source_location.column++;
                 }
-
-                source_location.offset++;
             }
 
             void skip_whitespace() {
                 while(!cursor.is_eof() && utils::is_whitespace(cursor.first())) {
-                    update_location(cursor.first());
+                    char character = cursor.first();
+
+                    if(lexer::is_crlf_sequence(character, cursor.previous())) {
+                        source_location.column = 1; 
+                    } else {
+                        update_location(character);
+                    }
+
                     cursor.bump();
                 }
             }
@@ -49,9 +55,18 @@ namespace lexer {
                 if (auto handler = get_handler(character)) {
                     Token token = handler(cursor, start);
 
-                    for (size_t index = start; index < cursor.position(); index++) {
-                        update_location(cursor.source_view[index]);
+                    for(size_t index = 0; index < token.str.size(); ++index) {
+                        char character = token.str[index];
+
+                        char prev_char = (index > 0) ? token.str[index - 1] : '\0';
+                        if(lexer::is_crlf_sequence(character, prev_char)) {
+                            source_location.column = 1;
+                        } else {
+                            update_location(character);
+                        }
                     }
+ 
+                    source_location.offset = start;
 
                     return Token {
                         token.kind, token.str,
@@ -61,6 +76,7 @@ namespace lexer {
 
                 update_location(character);
                 cursor.bump();
+                source_location.offset = start;
 
                 return make_error(start, StringView(&character, 1));
             }
