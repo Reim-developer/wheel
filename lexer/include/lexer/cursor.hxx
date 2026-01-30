@@ -4,6 +4,7 @@
 #include <string_view>
 #include <cstddef>
 #include <algorithm>
+#include "aliases.hxx"
 
 namespace lexer {
     constexpr char EOF_CHAR = '\0';
@@ -34,24 +35,28 @@ namespace lexer {
                 return source_view.substr(start, std::min(end - start, source_view.size()));
             }
 
-            [[nodiscard]] const char* chars() const noexcept {
+            WHEEL_ALWAYS_INLINE_NODISCARD const char* chars() const noexcept {
                 return source_view.data() + std::min(pos, source_view.size());
             }
 
-            [[nodiscard]] char previous() const noexcept {
+            WHEEL_ALWAYS_INLINE_NODISCARD char previous() const noexcept {
                 return prev;
             }
 
-            [[nodiscard]] bool has_previous() const noexcept {
+            WHEEL_ALWAYS_INLINE_NODISCARD bool has_previous() const noexcept {
                 return prev != EOF_CHAR;
             }
 
-            [[nodiscard]] char first() const noexcept {
+            WHEEL_ALWAYS_INLINE_NODISCARD char first() const noexcept {
                 return pos < source_view.size() ? source_view[pos] : EOF_CHAR;   
             }
 
-            [[nodiscard]] char second() const noexcept {
+            WHEEL_ALWAYS_INLINE_NODISCARD char second() const noexcept {
                 return pos + 1 < source_view.size() ? source_view[pos + 1] : EOF_CHAR;
+            }
+
+            WHEEL_ALWAYS_INLINE_NODISCARD char third() const noexcept {
+                return pos + 2 < source_view.size() ? source_view[pos + 2] : EOF_CHAR;
             }
             
             void advance(size_t n_char = 1) noexcept {
