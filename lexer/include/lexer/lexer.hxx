@@ -8,32 +8,21 @@
 #include "aliases.hxx"
 #include "properties.hxx"
 
+namespace properties = lexer::properties;
 namespace lexer {
     class Lexer {
+        private:
+
         private:
             Cursor          cursor;
             SourceLocation  source_location;
 
             void update_location(char character) {
-                if(lexer::is_newline_like(character)) {
+                if(properties::is_newline_like(character)) {
                     source_location.line++;
                     source_location.column = 1;
                 } else {
                     source_location.column++;
-                }
-            }
-
-            void skip_whitespace() {
-                while(!cursor.is_eof() && utils::is_whitespace(cursor.first())) {
-                    char character = cursor.first();
-
-                    if(lexer::is_crlf_sequence(character, cursor.previous())) {
-                        source_location.column = 1; 
-                    } else {
-                        update_location(character);
-                    }
-
-                    cursor.bump();
                 }
             }
 
@@ -42,9 +31,7 @@ namespace lexer {
                 cursor(source_text), 
                 source_location{1, 1, 0} {}
 
-            [[nodiscard]] Token next_token() {
-                skip_whitespace();
-
+            WHEEL_ALWAYS_INLINE_NODISCARD Token next_token() {
                 if(cursor.is_eof()) {
                     return make_eof(cursor.position());
                 }
@@ -59,7 +46,7 @@ namespace lexer {
                         char character = token.str[index];
 
                         char prev_char = (index > 0) ? token.str[index - 1] : '\0';
-                        if(lexer::is_crlf_sequence(character, prev_char)) {
+                        if(properties::is_crlf_sequence(character, prev_char)) {
                             source_location.column = 1;
                         } else {
                             update_location(character);
