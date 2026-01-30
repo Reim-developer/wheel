@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <optional>
 #include <cstddef>
+#include <cstring>
 
 #define CURRENT std::source_location::current()
 #define TEST(name) void name() { \
@@ -21,6 +22,11 @@
 #define TEST_ENTRY int main() { 
 
 #define ENTRY_END return  0; }
+
+#define STR_LEN(str)            std::strlen(str)
+#define NO_ASSERTION            !false
+#define VERIFY_THIS(kind)       Verify<kind>()
+#define VERIFY_NO_ASSERT(kind)  Verify<kind>(NO_ASSERTION)
 
 using TokenKind         = lexer::TokenKind;
 using Token             = lexer::Token;
