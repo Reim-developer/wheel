@@ -1,5 +1,6 @@
 #if !defined(HANDLERS_HXX)
 #define HANDLERS_HXX
+
 #include "cursor.hxx"
 #include "token.hxx"
 #include "utils.hxx"
@@ -9,18 +10,19 @@
 #include <array>
 
 namespace lexer {
+    #define _SOURCE_TEXT(cursor, start) cursor.source_view.substr(start, cursor.position() - start)
+    #define _WHEEL_HANDLERS(func_name) WHEEL_ALWAYS_INLINE_NODISCARD Token func_name(Cursor &cursor, size_t start) noexcept
+
     using TokenHandler = Token(*)(Cursor&, size_t);
     using StrView      = std::string_view;
     using Kind         = TokenKind;
 
-    #define _SOURCE_TEXT(cursor, start) cursor.source_view.substr(start, cursor.position() - start) 
-
-    [[nodiscard]] Token if_tab(Cursor& cursor, size_t start) noexcept {
+    _WHEEL_HANDLERS(if_tab) {
         cursor.bump();
         return make_token(Kind::TAB, "\t", start, cursor.position());
     }
 
-    [[nodiscard]] Token if_newline(Cursor& cursor, size_t start) noexcept {
+    _WHEEL_HANDLERS(if_newline) {
         if(cursor.first() == '\r' && cursor.second() == '\n') {
             cursor.bump();
             cursor.bump();
@@ -37,7 +39,7 @@ namespace lexer {
         return make_token(Kind::NEWLINE, "\n", start, cursor.position());
     }
 
-    [[nodiscard]] Token if_equal(Cursor &cursor, size_t start) noexcept {
+    _WHEEL_HANDLERS(if_equal) {
         cursor.bump();
 
         if(cursor.first() == '=') {
@@ -49,32 +51,29 @@ namespace lexer {
         return make_token(Kind::EQUAL, "=", start, cursor.position());
     }
 
-    [[nodiscard]] Token if_ident(Cursor &cursor, size_t start) noexcept {
+    _WHEEL_HANDLERS(if_ident) {
         while(utils::is_ident_continue(cursor.first())) {
             cursor.bump();
         }
 
-        StrView source_text = cursor.source_view.substr(start, cursor.position() - start);
-        return make_token(Kind::IDENT, source_text, start, cursor.position());
+        return make_token(Kind::IDENT, _SOURCE_TEXT(cursor, start), start, cursor.position());
     }
 
-    [[nodiscard]] Token if_digit(Cursor &cursor, size_t start) noexcept {
+    _WHEEL_HANDLERS(if_digit) {
         while(utils::is_digit(cursor.first())) {
             cursor.bump();
         }
 
-        StrView source_text = cursor.source_view.substr(start, cursor.position() - start);
-        return make_token(Kind::INT_LITERAL, source_text, start, cursor.position());
+        return make_token(Kind::INT_LITERAL, _SOURCE_TEXT(cursor, start), start, cursor.position());
     }
 
-    WHEEL_ALWAYS_INLINE_NODISCARD Token if_space(Cursor &cursor, size_t start) noexcept {
+    _WHEEL_HANDLERS(if_space) {
         cursor.bump();
 
-        StrView source_text = _SOURCE_TEXT(cursor, start);
-        return make_token(Kind::SPACE, source_text, start, cursor.position());
+        return make_token(Kind::SPACE, _SOURCE_TEXT(cursor, start), start, cursor.position());
     }
 
-    WHEEL_ALWAYS_INLINE_NODISCARD Token if_slash(Cursor &cursor, size_t start) noexcept {
+    _WHEEL_HANDLERS(if_slash) {
         cursor.bump();
 
         const char second = cursor.first();
@@ -134,9 +133,6 @@ namespace lexer {
 
         /* Operator(s) */
         table['=']  = if_equal;
-
-        constexpr int IDENT_START_FLAG = -1;
-        constexpr int DIGIT_FLAG       = -2;
 
         for(int character = 0; character < 256; character++) {
             if(utils::is_ident_start(static_cast<char>(character))) {
