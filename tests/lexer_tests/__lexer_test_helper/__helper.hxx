@@ -1,8 +1,8 @@
 #if !defined (__HELPER_HXX)
 #define __HELPER_HXX
 
-#include <lexer/lexer.hxx>
-#include <lexer/kind.hxx>
+#include <lib/lexer.hxx>
+#include <lib/kind.hxx>
 #include <string_view>
 #include <source_location>
 #include <format>
@@ -28,8 +28,8 @@
 #define VERIFY_THIS(kind)       Verify<kind>()
 #define VERIFY_NO_ASSERT(kind)  Verify<kind>(NO_ASSERTION)
 
-using TokenKind         = lexer::TokenKind;
-using Token             = lexer::Token;
+using TokenKind         = wheel_lexer::TokenKind;
+using Token             = wheel_lexer::Token;
 using StdSourceLocation = std::source_location;
 using StringView        = std::string_view;
 using Path              = std::filesystem::path;
@@ -126,8 +126,8 @@ struct Verify {
                     std::cerr << std::format(
                         "[FAILED] [{}:{}] Assertion Error: {} - ('{}') is not equal of {} - ('{}')",
                         line, basename, 
-                        static_cast<int>(token_kind), lexer::to_string(token_kind),
-                        static_cast<int>(ExpectedKind), lexer::to_string(ExpectedKind)
+                        static_cast<int>(token_kind), wheel_lexer::to_string(token_kind),
+                        static_cast<int>(ExpectedKind), wheel_lexer::to_string(ExpectedKind)
                     ) << "\n";
                     std::abort();
                 }
@@ -137,9 +137,9 @@ struct Verify {
                 "[SUCCESS] [{}:{}] Expected Token Enum As: {} - ('{}'). Got: {} - ('{}')",
                 line, basename,
                 static_cast<int>(token_kind),
-                lexer::to_string(token_kind),
+                wheel_lexer::to_string(token_kind),
                 static_cast<int>(ExpectedKind),
-                lexer::to_string(ExpectedKind)
+                wheel_lexer::to_string(ExpectedKind)
             ) << "\n";
         }
 };
