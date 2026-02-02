@@ -1,8 +1,8 @@
 #include "__lexer_test_helper/__helper.hxx"
-#include <lexer/lexer.hxx>
+#include <lib/lexer.hxx>
 
-using lexer::Lexer;
-using lexer::TokenKind;
+using wheel_lexer::Lexer;
+using wheel_lexer::TokenKind;
 
 TEST(test_normal_space)
     const char* source = " ";
