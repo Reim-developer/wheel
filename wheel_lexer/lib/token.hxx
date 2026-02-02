@@ -3,9 +3,10 @@
 
 #include "kind.hxx"
 #include "aliases.hxx"
+#include "__wheel_lexer_config.hxx"
 
-namespace lexer {
-    using Kind = TokenKind;
+WHEEL_LEXER_NAMESPACE
+    using __Kind = TokenKind;
 
     struct SourceLocation {
         SizeT line   = 1;
@@ -14,26 +15,27 @@ namespace lexer {
     };
 
     struct Token {
-        TokenKind       kind;
-        StringView      str;
-        SizeT           start;
-        SizeT           end;
-        SourceLocation  source_location;
+        public:
+            TokenKind       kind;
+            StringView      str;
+            SizeT           start;
+            SizeT           end;
+            SourceLocation  source_location;
 
-        constexpr Token() noexcept : kind(Kind::EOF_), start(0), end(0) {}
+            constexpr Token() noexcept : kind(__Kind::EOF_), start(0), end(0) {}
 
-        constexpr Token(Kind kind, StringView str, 
+            constexpr Token(__Kind kind, StringView str, 
                         size_t start, size_t end) noexcept : 
                         kind(kind), str(str), start(start),
                         end(end) {}
 
-        constexpr Token(Kind kind, StringView str, 
+            constexpr Token(__Kind kind, StringView str, 
                         size_t start, size_t end,
                         SourceLocation source_location) noexcept : 
                         kind(kind), str(str), start(start),
                         end(end), source_location(source_location) {}
         
-        [[nodiscard]] bool is(Kind kind_) const noexcept {
+        [[nodiscard]] bool is(__Kind kind_) const noexcept {
             return kind == kind_;
         }
         
@@ -45,7 +47,7 @@ namespace lexer {
             return kind == TokenKind::ERROR;
         }
 
-        [[nodiscard]] bool is_one_of(Kind kind1, Kind kind2) const noexcept {
+        [[nodiscard]] bool is_one_of(__Kind kind1, __Kind kind2) const noexcept {
             return kind == kind1 || kind == kind2;
         }
 
@@ -56,7 +58,7 @@ namespace lexer {
     };
 
 
-    [[nodiscard]] Token make_token(Kind kind, StringView str, 
+    [[nodiscard]] Token make_token(__Kind kind, StringView str, 
                     size_t start, size_t end) {
         
         return Token {
@@ -78,6 +80,7 @@ namespace lexer {
             pos, pos + 1
         };
     }
-}
+
+END_NAMESPACE
 
 #endif // TOKEN_HXX

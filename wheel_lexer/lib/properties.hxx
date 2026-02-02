@@ -1,11 +1,13 @@
 #if !defined(PROPERTIES_HXX)
 #define PROPERTIES_HXX
-#include "aliases.hxx"
 
 #include <cstdint>
 #include <array>
+#include "aliases.hxx"
+#include "__wheel_lexer_config.hxx"
 
-namespace lexer::properties {
+WHEEL_LEXER_NAMESPACE
+
     enum CharFlags : uint8_t {
         NONE            = 0,
         NEWLINE         = 1 << 0,
@@ -31,6 +33,7 @@ namespace lexer::properties {
             (CHAR_PROPERTIES[static_cast<unsigned char>(current_char)] & PREV_WAS_CR) &&
             (CHAR_PROPERTIES[static_cast<unsigned char>(prev_char)] & IS_CR);
     }
-}
+
+END_NAMESPACE
 
 #endif // PROPERTES_HXX

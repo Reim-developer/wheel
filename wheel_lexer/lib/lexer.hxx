@@ -7,9 +7,9 @@
 #include "handlers.hxx"
 #include "aliases.hxx"
 #include "properties.hxx"
+#include "__wheel_lexer_config.hxx"
 
-namespace properties = lexer::properties;
-namespace lexer {
+WHEEL_LEXER_NAMESPACE
     class Lexer {
         private:
 
@@ -18,7 +18,7 @@ namespace lexer {
             SourceLocation  source_location;
 
             void update_location(char character) {
-                if(properties::is_newline_like(character)) {
+                if(is_newline_like(character)) {
                     source_location.line++;
                     source_location.column = 1;
                 } else {
@@ -46,7 +46,7 @@ namespace lexer {
                         char character = token.str[index];
 
                         char prev_char = (index > 0) ? token.str[index - 1] : '\0';
-                        if(properties::is_crlf_sequence(character, prev_char)) {
+                        if(is_crlf_sequence(character, prev_char)) {
                             source_location.column = 1;
                         } else {
                             update_location(character);
@@ -68,6 +68,7 @@ namespace lexer {
                 return make_error(start, StringView(&character, 1));
             }
     };
-}
+
+END_NAMESPACE
 
 #endif // LEXER_HXX

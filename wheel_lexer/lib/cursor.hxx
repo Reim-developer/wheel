@@ -5,8 +5,10 @@
 #include <cstddef>
 #include <algorithm>
 #include "aliases.hxx"
+#include "__wheel_lexer_config.hxx"
 
-namespace lexer {
+WHEEL_LEXER_NAMESPACE
+
     constexpr char EOF_CHAR = '\0';
     struct Cursor {
         private:
@@ -80,6 +82,7 @@ namespace lexer {
                 return source_view[pos++];
             }
     };
-}
+
+END_NAMESPACE
 
 #endif // CURSOR_HXX

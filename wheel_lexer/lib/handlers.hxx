@@ -1,15 +1,16 @@
 #if !defined(HANDLERS_HXX)
 #define HANDLERS_HXX
 
+#include <string_view>
+#include <array>
 #include "cursor.hxx"
 #include "token.hxx"
 #include "utils.hxx"
 #include "aliases.hxx"
 #include "properties.hxx"
-#include <string_view>
-#include <array>
 
-namespace lexer {
+WHEEL_LEXER_NAMESPACE
+
     #define _SOURCE_TEXT(cursor, start) cursor.source_view.substr(start, cursor.position() - start)
     #define _WHEEL_HANDLERS(func_name) WHEEL_ALWAYS_INLINE_NODISCARD Token func_name(Cursor &cursor, size_t start) noexcept
 
@@ -52,7 +53,7 @@ namespace lexer {
     }
 
     _WHEEL_HANDLERS(if_ident) {
-        while(utils::is_ident_continue(cursor.first())) {
+        while(is_ident_continue(cursor.first())) {
             cursor.bump();
         }
 
@@ -60,7 +61,7 @@ namespace lexer {
     }
 
     _WHEEL_HANDLERS(if_digit) {
-        while(utils::is_digit(cursor.first())) {
+        while(is_digit(cursor.first())) {
             cursor.bump();
         }
 
@@ -92,7 +93,7 @@ namespace lexer {
                 cursor.bump();
                 if (is_doc) cursor.bump();
 
-                while(!cursor.is_eof() && !properties::is_newline_like(cursor.first())) {
+                while(!cursor.is_eof() && !is_newline_like(cursor.first())) {
                     cursor.bump();
                 }
 
@@ -135,11 +136,11 @@ namespace lexer {
         table['=']  = if_equal;
 
         for(int character = 0; character < 256; character++) {
-            if(utils::is_ident_start(static_cast<char>(character))) {
+            if(is_ident_start(static_cast<char>(character))) {
                 table[character] = if_ident;
             }
 
-            if (utils::is_digit(static_cast<char>(character))) {
+            if (is_digit(static_cast<char>(character))) {
                 table[character] = if_digit;
             }
         }
@@ -152,6 +153,7 @@ namespace lexer {
 
         return HANDLERS[uc];
     }
-}
+
+END_NAMESPACE
 
 #endif // HANDLERS_HXX

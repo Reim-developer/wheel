@@ -1,11 +1,13 @@
 #if !defined(UTILS_HXX)
 #define UTILS_HXX
-#include "aliases.hxx"
 
 #include <string>
 #include <string_view>
+#include "aliases.hxx"
+#include "__wheel_lexer_config.hxx"
 
-namespace lexer::utils {
+WHEEL_LEXER_NAMESPACE
+
     using String         = std::string;
     using StrView        = std::string_view;
 
@@ -59,6 +61,7 @@ namespace lexer::utils {
     WHEEL_COMPTIME_NODISCARD_INLINE bool starts_with(StrView str, char prefix) noexcept {
         return !str.empty() && str[0] == prefix;
     }
-}
+
+END_NAMESPACE 
 
 #endif // UTILS_HXX

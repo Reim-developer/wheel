@@ -3,8 +3,9 @@
 
 #include <cstdint>
 #include "aliases.hxx"
+#include "__wheel_lexer_config.hxx"
 
-namespace lexer {
+WHEEL_LEXER_NAMESPACE 
     enum class TokenKind : uint8_t {
         EOF_,
         ERROR,
@@ -88,6 +89,7 @@ namespace lexer {
 
         return "ERROR";
     }
-}
+
+END_NAMESPACE
 
 #endif // KIND_HXX
