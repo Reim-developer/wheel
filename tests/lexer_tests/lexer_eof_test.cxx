@@ -1,6 +1,6 @@
 #include "__lexer_test_helper/__helper.hxx"
-#include <lib/lexer.hxx>
-#include <lib/kind.hxx>
+#include <wheel_lexer/lexer.hxx>
+#include <wheel_lexer/kind.hxx>
 #include <__internal/__assert.hxx>
 #include <format>
 

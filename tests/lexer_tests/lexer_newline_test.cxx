@@ -1,5 +1,5 @@
 #include "__lexer_test_helper/__helper.hxx"
-#include <lib/lexer.hxx>
+#include <wheel_lexer/lexer.hxx>
 
 using wheel_lexer::Lexer;
 using wheel_lexer::Kind;

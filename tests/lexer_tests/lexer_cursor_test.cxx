@@ -1,6 +1,6 @@
 #include "__lexer_test_helper/__helper.hxx"
 #include "__internal/__assert.hxx"
-#include "lib/cursor.hxx"
+#include <wheel_lexer/cursor.hxx>
 #include "format"
 
 using wheel_lexer::Cursor;
