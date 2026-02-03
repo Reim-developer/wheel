@@ -5,7 +5,7 @@ on:
         branches: [ "dev" ]
     pull_request:
         branches: [ "dev" ]
-        
+
 jobs:
     build:
         runs-on: windows-latest
@@ -23,7 +23,11 @@ jobs:
           run: |
            cmake -B ${{ github.workspace }}/build -G "Visual Studio 17 2022"
 
-        - name: Test
+        - name: Build all targets
           run: |
-            cd scripts
-            .\run_test.py
+            cmake --build ${{ github.workspace }}/build --config Debug
+
+        - name: Run tests
+          run: |
+            cd ${{ github.workspace }}/build
+            ctest --verbose -C Debug
