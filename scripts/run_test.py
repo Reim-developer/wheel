@@ -16,6 +16,7 @@ class __CMakeBuildTarget(StrEnum):
 	LEXER_TAB_TEST		= "lexer_tab_test"
 	LEXER_COMMENT_TEST  = "lexer_comment_test"
 	LEXER_SPACE_TEST 	= "lexer_space_test"
+	LEXER_CURSOR_TEST   = "lexer_cursor_test"
 
 class __TargetConfig(StrEnum):
 	DEBUG = "Debug"
