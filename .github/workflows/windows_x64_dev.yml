@@ -15,9 +15,14 @@ jobs:
     
         - name: Setup MSVC 
           uses: ilammy/msvc-dev-cmd@v1
-          
+
           with:
             arch: x64
+        
+        - name: Setup Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.13'
 
         - name: Configure CMake
           run: |
@@ -25,4 +30,4 @@ jobs:
 
         - name: Run tests
           run: |
-            .\scripts\run_test.py
+            python scripts\run_test.py
