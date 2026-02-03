@@ -4,19 +4,19 @@ target_sources(
     wheel_lexer
     INTERFACE
         FILE_SET HEADERS 
-        BASE_DIRS lib
+        BASE_DIRS include
         FILES
-            lib/token.hxx
-            lib/cursor.hxx
-            lib/aliases.hxx
-            lib/handlers.hxx
-            lib/kind.hxx
-            lib/utils.hxx
-            lib/lexer.hxx
+            include/wheel_lexer/token.hxx
+            include/wheel_lexer/cursor.hxx
+            include/wheel_lexer/aliases.hxx
+            include/wheel_lexer/handlers.hxx
+            include/wheel_lexer/kind.hxx
+            include/wheel_lexer/utils.hxx
+            include/wheel_lexer/lexer.hxx
 )
 
 target_include_directories(
     wheel_lexer
     INTERFACE
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
