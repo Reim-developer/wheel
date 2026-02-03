@@ -97,9 +97,8 @@ def __switch_working_dir() -> None:
 def main() -> None:
 	__switch_working_dir()
 	__gen_cmake()
-	for target in __CMakeBuildTarget:
-		print(f"Start testing {target.value}")
-		
+	
+	for target in __CMakeBuildTarget:		
 		__cmake_build_target(target.value, __TargetConfig.DEBUG)
 
 	__run_test(config = __TargetConfig.DEBUG)
