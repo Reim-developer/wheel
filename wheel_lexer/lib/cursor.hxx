@@ -61,7 +61,7 @@ WHEEL_LEXER_NAMESPACE
                 return pos + 2 < source_view.size() ? source_view[pos + 2] : EOF_CHAR;
             }
             
-            void advance(size_t n_char = 1) noexcept {
+            WHEEL_ALWAYS_INLINE void advance(size_t n_char = 1) noexcept {
                 pos = std::min(pos + n_char, source_view.size());
             }
 
