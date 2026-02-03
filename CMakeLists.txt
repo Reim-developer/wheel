@@ -6,6 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(analyzer)
 add_subdirectory(wheel_lexer)
+
+if(WIN32)
+    set(CMAKE_CXX_COMPILER cl CACHE STRING "")
+
+elseif(APPLE OR UNIX)
+    set(CMAKE_CXX_COMPILER clang++ CACHE STRING "")
+
+endif()
+
 add_executable(
     ${PROJECT_NAME}
     src/main.cxx
