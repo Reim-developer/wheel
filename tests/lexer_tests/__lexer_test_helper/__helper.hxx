@@ -1,8 +1,8 @@
 #if !defined (__HELPER_HXX)
 #define __HELPER_HXX
 
-#include <lib/lexer.hxx>
-#include <lib/kind.hxx>
+#include <wheel_lexer/lexer.hxx>
+#include <wheel_lexer/kind.hxx>
 #include <string_view>
 #include <source_location>
 #include <format>
