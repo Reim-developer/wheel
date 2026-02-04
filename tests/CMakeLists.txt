@@ -13,9 +13,11 @@ function (setup_wheel_test test_name test_source)
             ${CMAKE_SOURCE_DIR}/src
             ${CMAKE_SOURCE_DIR}/tests  
             ${CMAKE_SOURCE_DIR}/wheel_lexer
+            ${CMAKE_SOURCE_DIR}/wheel_utils
     )
 
     target_link_libraries(${test_name} PRIVATE wheel_lexer)
+    target_link_libraries(${test_name} PRIVATE wheel_utils)
     set_property(TARGET ${test_name} PROPERTY CXX_STANDARD 20)
 
     set_target_properties(
