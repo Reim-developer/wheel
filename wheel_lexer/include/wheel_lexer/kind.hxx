@@ -41,6 +41,8 @@ WHEEL_LEXER_NAMESPACE
         STAR,
         /* `/` */
         SLASH,
+        /* `++` */
+        PLUS_PLUS,
         /* `==` */
         EQUAL_EQUAL,
         /* `!=` */
@@ -74,6 +76,7 @@ WHEEL_LEXER_NAMESPACE
             case TokenKind::STRING_LITERAL:     return "STRING_LITERAL";
             case TokenKind::EQUAL:              return "EQUAL";
             case TokenKind::PLUS:               return "PLUS";
+            case TokenKind::PLUS_PLUS:          return "PLUS_PLUS";
             case TokenKind::MINUS:              return "MINUS";
             case TokenKind::STAR:               return "STAR";
             case TokenKind::SLASH:              return "SLASH";
