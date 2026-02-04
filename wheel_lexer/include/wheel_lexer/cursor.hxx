@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "aliases.hxx"
 #include "__wheel_lexer_config.hxx"
+#include <wheel_utils/logging.hxx>
 
 WHEEL_LEXER_NAMESPACE
 
@@ -70,6 +71,7 @@ WHEEL_LEXER_NAMESPACE
             }
 
             [[nodiscard]] size_t position() const noexcept {
+                DEBUG_PRINT(std::format("Position: {}", pos));
                 return pos;
             }
 
