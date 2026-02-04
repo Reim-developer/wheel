@@ -30,13 +30,17 @@ WHEEL_UTILS_NAMESPACE
                 const auto fmt = std::format("[DEBUG] [{}:{}] {}", __LINE__, WHEEL_BASE_NAME(__FILE__), msg);\
                 std::cout << fmt << "\n";\
             } while(0)
+
+        #define FORMAT(...) std::format(__VA_ARGS__)
     
     #else
         #define DEBUG_PRINT(msg) ((void)0)
+        #define FORMAT(...) ((void)0)
     #endif
 
 #else 
     #define DEBUG_PRINT(msg) ((void)0)
+    #define FORMAT(...) ((void)0)
 #endif 
 
 WHEEL_UTILS_END_NAMESPACE
