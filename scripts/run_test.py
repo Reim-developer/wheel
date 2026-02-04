@@ -9,14 +9,15 @@ from enum 		import IntEnum, StrEnum
 from subprocess	import run
 
 class __CMakeBuildTarget(StrEnum):
-	ALLOCATOR_TEST 		= "allocator_test"
-	TAB_ANALYZER_TEST   = "tab_analyzer_test"
-	LEXER_EOF_TEST 	 	= "lexer_eof_test"
-	LEXER_NEWLINE_TEST  = "lexer_newline_test"
-	LEXER_TAB_TEST		= "lexer_tab_test"
-	LEXER_COMMENT_TEST  = "lexer_comment_test"
-	LEXER_SPACE_TEST 	= "lexer_space_test"
-	LEXER_CURSOR_TEST   = "lexer_cursor_test"
+	ALLOCATOR_TEST 				= "allocator_test"
+	TAB_ANALYZER_TEST   		= "tab_analyzer_test"
+	LEXER_EOF_TEST 	 			= "lexer_eof_test"
+	LEXER_NEWLINE_TEST  		= "lexer_newline_test"
+	LEXER_TAB_TEST				= "lexer_tab_test"
+	LEXER_COMMENT_TEST  		= "lexer_comment_test"
+	LEXER_SPACE_TEST 			= "lexer_space_test"
+	LEXER_CURSOR_TEST   		= "lexer_cursor_test"
+	LEXER_PLUS_OPERATOR_TEST 	= "lexer_plus_operator_test"
 
 class __TargetConfig(StrEnum):
 	DEBUG = "Debug"
