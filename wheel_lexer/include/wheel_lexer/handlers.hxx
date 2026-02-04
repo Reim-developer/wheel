@@ -8,12 +8,14 @@
 #include "utils.hxx"
 #include "aliases.hxx"
 #include "properties.hxx"
+#include <wheel_utils/logging.hxx>
 
 WHEEL_LEXER_NAMESPACE
 
     #define _SOURCE_TEXT(cursor, start) cursor.source_view.substr(start, cursor.position() - start)
     #define _WHEEL_HANDLERS(func_name) WHEEL_ALWAYS_INLINE_NODISCARD Token func_name(Cursor &cursor, size_t start) noexcept
-
+    #define _WHEEL_MAKE_TOKEN(kind, source) return make_token(kind, source, start, cursor.position())
+  
     using TokenHandler = Token(*)(Cursor&, size_t);
     using StrView      = std::string_view;
     using Kind         = TokenKind;
@@ -121,6 +123,19 @@ WHEEL_LEXER_NAMESPACE
 
         return make_token(Kind::ERROR, _SOURCE_TEXT(cursor, start), start, cursor.position());
     }
+
+    _WHEEL_HANDLERS(if_plus) {
+        cursor.bump();
+
+        auto next = cursor.bump();
+        if(next == '+') {
+            DEBUG_PRINT(FORMAT("'if_plus': {}", next));
+            _WHEEL_MAKE_TOKEN(Kind::PLUS_PLUS, _SOURCE_TEXT(cursor, start));
+        }
+
+        DEBUG_PRINT(FORMAT("'if_plus': {}", _SOURCE_TEXT(cursor, start)));
+        _WHEEL_MAKE_TOKEN(Kind::PLUS, _SOURCE_TEXT(cursor, start));
+    }
  
     constexpr std::array<TokenHandler, 256> HANDLERS = []() {
         std::array<TokenHandler, 256> table = {};
@@ -134,6 +149,7 @@ WHEEL_LEXER_NAMESPACE
 
         /* Operator(s) */
         table['=']  = if_equal;
+        table['+']  = if_plus;
 
         for(int character = 0; character < 256; character++) {
             if(is_ident_start(static_cast<char>(character))) {
