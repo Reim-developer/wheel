@@ -71,7 +71,6 @@ WHEEL_LEXER_NAMESPACE
             }
 
             [[nodiscard]] size_t position() const noexcept {
-                DEBUG_PRINT(std::format("Position: {}", pos));
                 return pos;
             }
 
