@@ -127,8 +127,10 @@ WHEEL_LEXER_NAMESPACE
     _WHEEL_HANDLERS(if_plus) {
         cursor.bump();
 
-        auto next = cursor.bump();
+        auto next = cursor.first();
         if(next == '+') {
+            cursor.bump();
+            
             DEBUG_PRINT(FORMAT("'if_plus': {}", next));
             _WHEEL_MAKE_TOKEN(Kind::PLUS_PLUS, _SOURCE_TEXT(cursor, start));
         }
