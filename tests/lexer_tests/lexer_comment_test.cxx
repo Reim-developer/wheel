@@ -11,7 +11,7 @@ TEST(test_normal_block_comment)
     auto token = lexer.next_token();
 
     VERIFY_THIS(TokenKind::COMMENT).token_str_eq_to(token, "/* comment */", STR_LEN(source));
-    VERIFY_THIS(TokenKind::COMMENT).token_metadata_eq_to(token, 1, 14, 0);
+    VERIFY_THIS(TokenKind::COMMENT).token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
     VERIFY_THIS(TokenKind::COMMENT).token_as(token.kind);
 DONE 
 
@@ -22,7 +22,7 @@ TEST(test_normal_document_block_comment)
     auto token = lexer.next_token();
 
     VERIFY_THIS(TokenKind::DOCUMENT_COMMENT).token_str_eq_to(token, "/// simple document", STR_LEN(source));
-    VERIFY_THIS(TokenKind::DOCUMENT_COMMENT).token_metadata_eq_to(token, 1, 20, 0);
+    VERIFY_THIS(TokenKind::DOCUMENT_COMMENT).token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
     VERIFY_THIS(TokenKind::DOCUMENT_COMMENT).token_as(token.kind);
 DONE
 
@@ -33,7 +33,7 @@ TEST(test_normal_comment_with_newline)
     auto token = lexer.next_token();
 
     VERIFY_THIS(TokenKind::COMMENT).token_str_eq_to(token, "/* \n my multiple line comment */", STR_LEN(source));
-    VERIFY_THIS(TokenKind::COMMENT).token_metadata_eq_to(token, 2, 29, 0);
+    VERIFY_THIS(TokenKind::COMMENT).token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
     VERIFY_THIS(TokenKind::COMMENT).token_as(token.kind);
 DONE
 
@@ -45,7 +45,7 @@ TEST(test_comment_error)
 
     VERIFY_THIS(TokenKind::COMMENT).token_str_eq_to(token, "/* bad comment without close", STR_LEN(source));
     VERIFY_THIS(TokenKind::COMMENT).token_as(token.kind);
-    VERIFY_THIS(TokenKind::COMMENT).token_metadata_eq_to(token, 1, 29, 0);
+    VERIFY_THIS(TokenKind::COMMENT).token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
 DONE
 
 TEST(test_division_operator_basic)
