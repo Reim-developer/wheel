@@ -20,7 +20,6 @@ WHEEL_LEXER_NAMESPACE
             StringView      str;
             SizeT           start;
             SizeT           end;
-            SourceLocation  source_location;
 
             constexpr Token() noexcept : kind(__Kind::EOF_), start(0), end(0) {}
 
@@ -28,12 +27,6 @@ WHEEL_LEXER_NAMESPACE
                         size_t start, size_t end) noexcept : 
                         kind(kind), str(str), start(start),
                         end(end) {}
-
-            constexpr Token(__Kind kind, StringView str, 
-                        size_t start, size_t end,
-                        SourceLocation source_location) noexcept : 
-                        kind(kind), str(str), start(start),
-                        end(end), source_location(source_location) {}
         
         [[nodiscard]] bool is(__Kind kind_) const noexcept {
             return kind == kind_;
