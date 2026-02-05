@@ -17,7 +17,7 @@ TEST(test_eof_success_with_empty_input)
 
     VERIFY_THIS(TokenKind::EOF_).token_as(TokenKind::EOF_);
     VERIFY_THIS(TokenKind::EOF_).token_str_eq_to(token, "", 0);
-    VERIFY_THIS(TokenKind::EOF_).token_metadata_eq_to(token, 1, 1, 0);
+    VERIFY_THIS(TokenKind::EOF_).token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
 DONE
 
 TEST_ENTRY
