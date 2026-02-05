@@ -43,6 +43,8 @@ WHEEL_LEXER_NAMESPACE
         SLASH,
         /* `++` */
         PLUS_PLUS,
+        /* `--` */
+        MINUS_MINUS,
         /* `==` */
         EQUAL_EQUAL,
         /* `!=` */
@@ -56,7 +58,7 @@ WHEEL_LEXER_NAMESPACE
         /* `,` */
         COMMA,
         /* `)` */ 
-        LEFT_PAREN,
+        LEFT_PARENT,
         /* `(` */
         RIGHT_PARENT
     };
@@ -77,6 +79,7 @@ WHEEL_LEXER_NAMESPACE
             case TokenKind::EQUAL:              return "EQUAL";
             case TokenKind::PLUS:               return "PLUS";
             case TokenKind::PLUS_PLUS:          return "PLUS_PLUS";
+            case TokenKind::MINUS_MINUS:        return "MINUS_MINUS";
             case TokenKind::MINUS:              return "MINUS";
             case TokenKind::STAR:               return "STAR";
             case TokenKind::SLASH:              return "SLASH";
@@ -86,7 +89,7 @@ WHEEL_LEXER_NAMESPACE
             case TokenKind::GREATER_THAN:       return "GREATER_THAN";
             case TokenKind::COLON:              return "COLON";
             case TokenKind::COMMA:              return "COMMA";
-            case TokenKind::LEFT_PAREN:         return "LEFT_PARENT";
+            case TokenKind::LEFT_PARENT:         return "LEFT_PARENT";
             case TokenKind::RIGHT_PARENT:       return  "RIGHT_PARENT";
         }
 
