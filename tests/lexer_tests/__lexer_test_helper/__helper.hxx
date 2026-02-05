@@ -30,6 +30,7 @@
 
 using TokenKind         = wheel_lexer::TokenKind;
 using Token             = wheel_lexer::Token;
+using SourceLocation    = wheel_lexer::SourceLocation;
 using StdSourceLocation = std::source_location;
 using StringView        = std::string_view;
 using Path              = std::filesystem::path;
@@ -45,23 +46,23 @@ struct Verify {
             m_output_only(output_only),
             m_source_location(current) {}
 
-        void token_metadata_eq_to(const Token &token, 
+        void token_metadata_eq_to(const SourceLocation &source_location, 
                                 std::size_t file_line, std::size_t file_column, 
                                 std::size_t file_offset) {
             const auto basename = Path(m_source_location.file_name()).filename().string();
             const auto line     = m_source_location.line();
             
             if (!m_output_only) {
-                if (token.source_location.line != file_line 
-                    || token.source_location.column != file_column 
-                    || token.source_location.offset != file_offset) {
+                if (source_location.line != file_line 
+                    || source_location.column != file_column 
+                    || source_location.offset != file_offset) {
                     std::cerr << std::format(
                         "[FAILED] [{}:{}] Assertion Error. Expect: |{}, {}, {}|. Got: |{}, {}, {}|",
                         line, basename, 
                         file_line, file_column, file_offset,
-                        token.source_location.line,
-                        token.source_location.column,
-                        token.source_location.offset
+                        source_location.line,
+                        source_location.column,
+                        source_location.offset
                     ) << "\n";
                     std::abort();
                 }
@@ -71,9 +72,9 @@ struct Verify {
                 "[SUCCESS] [{}:{}] Expected Source Metadata |{}, {}, {}|. Got: |{}, {}, {}|",
                 line, basename, 
                 file_line, file_column, file_offset,
-                token.source_location.line,
-                token.source_location.column,
-                token.source_location.offset
+                source_location.line,
+                source_location.column,
+                source_location.offset
             ) << "\n";
         }
 
