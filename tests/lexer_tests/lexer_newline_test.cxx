@@ -10,7 +10,7 @@ TEST(test_lf_newline)
     const auto token  = lexer.next_token();
 
     Verify<Kind::NEWLINE>().token_str_eq_to(token, "\n", 1);
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(token, 2, 1, 0);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
 DONE 
 
 TEST(test_crlf_newline)
@@ -19,7 +19,7 @@ TEST(test_crlf_newline)
     const auto token  = lexer.next_token();
 
     Verify<Kind::NEWLINE>().token_str_eq_to(token, "\r\n", 2);
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(token, 2, 1, 0);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
 DONE
 
 TEST(test_cr_newline)
@@ -28,7 +28,7 @@ TEST(test_cr_newline)
     const auto token  = lexer.next_token();
 
     Verify<Kind::NEWLINE>().token_str_eq_to(token, "\r", 1);
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(token, 2, 1, 0);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
 DONE
 
 TEST(test_multilpe_new_lines)
@@ -36,13 +36,13 @@ TEST(test_multilpe_new_lines)
     Lexer lexer(source);
     
     auto t1 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t1), 1, 1, 0);
     
     auto t2 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 1);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t2), 2, 1, 1);
 
     auto t3 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 2);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t3), 3, 1, 2);
 DONE 
 
 TEST(test_multilpe_new_lines_clrf)
@@ -50,13 +50,13 @@ TEST(test_multilpe_new_lines_clrf)
     Lexer lexer(source);
     
     auto t1 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t1), 1, 1, 0);
     
     auto t2 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 2);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t2), 2, 2, 2);
 
     auto t3 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 4);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t3), 3, 2, 4);
 DONE
 
 TEST(test_multilpe_new_cr)
@@ -64,13 +64,13 @@ TEST(test_multilpe_new_cr)
     Lexer lexer(source);
 
     const auto t1  = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t1), 1, 1, 0);
 
     const auto t2 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 1);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t2), 2, 1, 1);
 
     const auto t3 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 2);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t3), 3, 1, 2);
 DONE
 
 TEST(test_multilpe_new_line_mixed)
@@ -78,13 +78,13 @@ TEST(test_multilpe_new_line_mixed)
     Lexer lexer(source);
 
     const auto t1  = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t1, 2, 1, 0);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t1), 1, 1, 0);
 
     const auto t2 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t2, 3, 1, 1);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t2), 2, 1, 1);
 
     const auto t3 = lexer.next_token();
-    Verify<Kind::NEWLINE>().token_metadata_eq_to(t3, 4, 1, 2);
+    Verify<Kind::NEWLINE>().token_metadata_eq_to(lexer.get_source_location(t3), 3, 1, 2);
 DONE 
 
 TEST_ENTRY
