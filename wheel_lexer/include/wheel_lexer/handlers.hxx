@@ -14,7 +14,11 @@ WHEEL_LEXER_NAMESPACE
 
     #define _SOURCE_TEXT(cursor, start) cursor.source_view.substr(start, cursor.position() - start)
     #define _WHEEL_HANDLERS(func_name) WHEEL_ALWAYS_INLINE_NODISCARD Token func_name(Cursor &cursor, size_t start) noexcept
-    #define _WHEEL_MAKE_TOKEN(kind, source) return make_token(kind, source, start, cursor.position())
+    #define _WHEEL_MAKE_TOKEN(kind, source, label) \
+        do { \
+            DEBUG_PRINT(FORMAT("'{}': {}", #label, source)); \
+            return make_token(kind, source, start, cursor.position()); \
+        } while(0)
   
     using TokenHandler = Token(*)(Cursor&, size_t);
     using StrView      = std::string_view;
@@ -81,8 +85,7 @@ WHEEL_LEXER_NAMESPACE
 
         const char second = cursor.first();
         if(second != '/' && second != '*') {
-            
-            return make_token(Kind::SLASH, _SOURCE_TEXT(cursor, start), start, cursor.position());
+            _WHEEL_MAKE_TOKEN(Kind::SLASH, _SOURCE_TEXT(cursor, start), if_slash);
         }
 
         switch(second) {
@@ -99,7 +102,7 @@ WHEEL_LEXER_NAMESPACE
                     cursor.bump();
                 }
 
-                return make_token(kind, _SOURCE_TEXT(cursor, start), start, cursor.position());
+                _WHEEL_MAKE_TOKEN(kind, _SOURCE_TEXT(cursor, start), if_slash);
             }
 
             case '*': {
@@ -130,13 +133,27 @@ WHEEL_LEXER_NAMESPACE
         auto next = cursor.first();
         if(next == '+') {
             cursor.bump();
-            
-            DEBUG_PRINT(FORMAT("'if_plus': {}", next));
-            _WHEEL_MAKE_TOKEN(Kind::PLUS_PLUS, _SOURCE_TEXT(cursor, start));
+            _WHEEL_MAKE_TOKEN(Kind::PLUS_PLUS, _SOURCE_TEXT(cursor, start), if_plus);
+        }
+        _WHEEL_MAKE_TOKEN(Kind::PLUS, _SOURCE_TEXT(cursor, start), if_plus);
+    }
+
+    _WHEEL_HANDLERS(if_minus) {
+        cursor.bump();
+        
+        auto next  = cursor.first();
+        if (next == '-') {
+            cursor.bump();
+            _WHEEL_MAKE_TOKEN(Kind::MINUS_MINUS, _SOURCE_TEXT(cursor, start), if_minus);
         }
 
-        DEBUG_PRINT(FORMAT("'if_plus': {}", _SOURCE_TEXT(cursor, start)));
-        _WHEEL_MAKE_TOKEN(Kind::PLUS, _SOURCE_TEXT(cursor, start));
+        _WHEEL_MAKE_TOKEN(Kind::MINUS, _SOURCE_TEXT(cursor, start), if_minus);
+    }
+
+    _WHEEL_HANDLERS(if_star) {
+        cursor.bump();
+
+        _WHEEL_MAKE_TOKEN(Kind::STAR, _SOURCE_TEXT(cursor, start), if_star);
     }
  
     constexpr std::array<TokenHandler, 256> HANDLERS = []() {
@@ -152,6 +169,8 @@ WHEEL_LEXER_NAMESPACE
         /* Operator(s) */
         table['=']  = if_equal;
         table['+']  = if_plus;
+        table['-']  = if_minus;
+        table['*']  = if_star;
 
         for(int character = 0; character < 256; character++) {
             if(is_ident_start(static_cast<char>(character))) {
