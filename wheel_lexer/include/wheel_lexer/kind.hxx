@@ -53,6 +53,10 @@ WHEEL_LEXER_NAMESPACE
         LESS_THAN,
         /* `>` */
         GREATER_THAN,
+        /* `->` */
+        ARROW,
+        /* `=>` */
+        FAT_ARROW,
         /* `:` */
         COLON,
         /* `,` */
@@ -84,6 +88,8 @@ WHEEL_LEXER_NAMESPACE
             case TokenKind::STAR:               return "STAR";
             case TokenKind::SLASH:              return "SLASH";
             case TokenKind::EQUAL_EQUAL:        return "EQUAL_EQUAL";
+            case TokenKind::ARROW:              return "ARROW";
+            case TokenKind::FAT_ARROW:          return "FAT_ARROW";
             case TokenKind::NOT_EQUAL:          return "NOT_EQUAL";
             case TokenKind::LESS_THAN:          return "LESS_THAN";
             case TokenKind::GREATER_THAN:       return "GREATER_THAN";
