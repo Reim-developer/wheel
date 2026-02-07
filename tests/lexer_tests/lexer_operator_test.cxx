@@ -152,6 +152,32 @@ TEST(test_normal_slash_operator)
     }, "/");
 DONE 
 
+TEST(test_normal_arrow_operator)
+    const char *source = "->";
+    Lexer lexer(source);
+
+    auto token              = lexer.next_token();
+    auto source_location    = lexer.get_source_location(token);
+    operator_expected<TokenKind::ARROW>(token, source_location, Metadata {
+        .line   = 1,
+        .column = 1,
+        .offset = 0
+    }, "->");
+DONE 
+
+TEST(test_normal_fat_arrow_operator)
+    const char *source = "=>";
+    Lexer lexer(source);
+
+    auto token              = lexer.next_token();
+    auto source_location    = lexer.get_source_location(token);
+    operator_expected<TokenKind::FAT_ARROW>(token, source_location, Metadata {
+        .line   = 1,
+        .column = 1,
+        .offset = 0
+    }, "=>");
+DONE 
+
 TEST(test_normal_operator_with_simple_statement)
    operator_statement_expected<TokenKind::MINUS>('-');
    operator_statement_expected<TokenKind::PLUS>('+');
@@ -167,4 +193,6 @@ TEST_ENTRY
     RUN_TEST(test_normal_star_operator)
     RUN_TEST(test_normal_slash_operator)
     RUN_TEST(test_normal_operator_with_simple_statement);
+    RUN_TEST(test_normal_arrow_operator);
+    RUN_TEST(test_normal_fat_arrow_operator);
 ENTRY_END
