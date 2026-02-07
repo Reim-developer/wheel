@@ -62,6 +62,14 @@ WHEEL_LEXER_NAMESPACE
         return !str.empty() && str[0] == prefix;
     }
 
+    WHEEL_COMPTIME_NODISCARD_INLINE bool is_sign(char character) noexcept {
+        return character == '-' || character == '+';
+    }
+
+    WHEEL_COMPTIME_NODISCARD_INLINE bool is_exponent_marker(char character) noexcept {
+        return character == 'E' || character == 'e';
+    }
+
 END_NAMESPACE 
 
 #endif // UTILS_HXX
