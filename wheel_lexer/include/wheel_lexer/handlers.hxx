@@ -49,10 +49,17 @@ WHEEL_LEXER_NAMESPACE
     _WHEEL_HANDLERS(if_equal) {
         cursor.bump();
 
-        if(cursor.first() == '=') {
-            cursor.bump();
+        auto next = cursor.first();
+        switch(next) {
+            case '=': {
+                cursor.bump();
+                _WHEEL_MAKE_TOKEN(Kind::EQUAL_EQUAL, _SOURCE_TEXT(cursor, start), if_equal);
+            }
 
-            return make_token(Kind::EQUAL_EQUAL, "==", start, cursor.position());
+            case '>': {
+                cursor.bump();
+                _WHEEL_MAKE_TOKEN(Kind::FAT_ARROW, _SOURCE_TEXT(cursor, start), if_equal);
+            }
         }
 
         return make_token(Kind::EQUAL, "=", start, cursor.position());
@@ -69,6 +76,29 @@ WHEEL_LEXER_NAMESPACE
     _WHEEL_HANDLERS(if_digit) {
         while(is_digit(cursor.first())) {
             cursor.bump();
+        }
+
+        if (cursor.first() ==  '.' && is_digit(cursor.second())) {
+            cursor.bump();
+
+            while(is_digit(cursor.first())) cursor.bump();
+
+            if(is_exponent_marker(cursor.first())) {
+                cursor.bump();
+
+                while(is_sign(cursor.first())) cursor.bump();
+                while(is_digit(cursor.first())) cursor.bump();
+            }
+
+            _WHEEL_MAKE_TOKEN(Kind::FLOAT_LITERAL, _SOURCE_TEXT(cursor, start), if_digit);
+        }
+
+        if(is_exponent_marker(cursor.first())) {
+            cursor.bump();
+
+            while(is_sign(cursor.first())) cursor.bump();
+            while(is_digit(cursor.first())) cursor.bump();
+            _WHEEL_MAKE_TOKEN(Kind::FLOAT_LITERAL, _SOURCE_TEXT(cursor, start), if_digit);
         }
 
         return make_token(Kind::INT_LITERAL, _SOURCE_TEXT(cursor, start), start, cursor.position());
@@ -142,11 +172,18 @@ WHEEL_LEXER_NAMESPACE
         cursor.bump();
         
         auto next  = cursor.first();
-        if (next == '-') {
-            cursor.bump();
-            _WHEEL_MAKE_TOKEN(Kind::MINUS_MINUS, _SOURCE_TEXT(cursor, start), if_minus);
-        }
+        switch(next) {
+            case '-': { 
+                cursor.bump(); 
+                _WHEEL_MAKE_TOKEN(Kind::MINUS_MINUS, _SOURCE_TEXT(cursor, start), if_minus); 
+            }
 
+            case '>': {
+                cursor.bump();
+                _WHEEL_MAKE_TOKEN(Kind::ARROW, _SOURCE_TEXT(cursor, start), if_minus);
+            }
+        }
+    
         _WHEEL_MAKE_TOKEN(Kind::MINUS, _SOURCE_TEXT(cursor, start), if_minus);
     }
 
