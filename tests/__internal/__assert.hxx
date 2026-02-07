@@ -70,4 +70,42 @@ string random_str(size_t length) {
     return result;
 }
 
+string rand_source_digits(
+        bool exponent   = false, bool negative = false,
+        bool rand_float = false) {
+    random_device                    random;
+    mt19937                          generator(random());
+    uniform_int_distribution<size_t> distribution(0, 9);
+
+    size_t len = distribution(generator) + 1;
+    string results;
+
+    for(size_t index = 0; index < len; ++index) {
+        results.push_back('0' + distribution(generator));
+    }
+
+    if(rand_float) {
+        results.push_back('.');
+
+        size_t decimal_len = distribution(generator) % 10 + 1;
+        for(size_t index = 0; index < decimal_len; ++index) {
+            results.push_back('0' + distribution(generator));
+        }
+    }
+
+    if (exponent) {
+        results.push_back('e');
+        if (negative) {
+            results.push_back('-');
+        }
+
+        size_t exponent_len = distribution(generator) % 5 + 1;
+        for (size_t index = 0; index < exponent_len; ++index) {
+            results.push_back('0' + distribution(generator));
+        }
+    }
+
+    return results;
+}
+
 #endif // __ASSERT_HXX
