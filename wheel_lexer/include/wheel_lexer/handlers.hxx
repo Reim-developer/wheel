@@ -19,14 +19,48 @@ WHEEL_LEXER_NAMESPACE
             DEBUG_PRINT(FORMAT("'{}': {}", #label, source)); \
             return make_token(kind, source, start, cursor.position()); \
         } while(0)
+    #define _WHEEL_CONSUME_ALL_IF(condition, cursor) \
+        do { \
+            while(condition) cursor.bump(); \
+        } while(0)
   
     using TokenHandler = Token(*)(Cursor&, size_t);
     using StrView      = std::string_view;
     using Kind         = TokenKind;
 
     _WHEEL_HANDLERS(if_tab) {
-        cursor.bump();
+        cursor.bump(); 
         return make_token(Kind::TAB, "\t", start, cursor.position());
+    }
+
+    _WHEEL_HANDLERS(if_string_literal) {
+        cursor.bump();
+
+        while (true) {
+            auto closed_str = cursor.bump();
+
+            if(is_newline_like(closed_str)) break;
+            if(closed_str == '\"' || closed_str == '\0') break;
+        }
+
+        _WHEEL_MAKE_TOKEN(TokenKind::STRING_LITERAL, _SOURCE_TEXT(cursor, start), if_string_literal);
+    }
+
+    _WHEEL_HANDLERS(if_raw_string_literal) {
+        cursor.bump();
+
+        if (cursor.first() == '\"') {
+            cursor.bump();
+
+            while(true) {
+                auto closed_str = cursor.bump();
+                if (closed_str == '\"' || closed_str == '\0') break;
+            }
+
+            _WHEEL_MAKE_TOKEN(TokenKind::RAW_STRING_LITERAL, _SOURCE_TEXT(cursor, start), if_string_literal);
+        }
+
+        _WHEEL_MAKE_TOKEN(TokenKind::IDENT, _SOURCE_TEXT(cursor, start), if_string_literal);
     }
 
     _WHEEL_HANDLERS(if_newline) {
@@ -74,20 +108,17 @@ WHEEL_LEXER_NAMESPACE
     }
 
     _WHEEL_HANDLERS(if_digit) {
-        while(is_digit(cursor.first())) {
-            cursor.bump();
-        }
+        _WHEEL_CONSUME_ALL_IF(is_digit(cursor.first()), cursor);
 
         if (cursor.first() ==  '.' && is_digit(cursor.second())) {
             cursor.bump();
 
-            while(is_digit(cursor.first())) cursor.bump();
-
+            _WHEEL_CONSUME_ALL_IF(is_digit(cursor.first()), cursor);
             if(is_exponent_marker(cursor.first())) {
                 cursor.bump();
 
-                while(is_sign(cursor.first())) cursor.bump();
-                while(is_digit(cursor.first())) cursor.bump();
+                _WHEEL_CONSUME_ALL_IF(is_sign(cursor.first()), cursor);
+                _WHEEL_CONSUME_ALL_IF(is_digit(cursor.first()), cursor);
             }
 
             _WHEEL_MAKE_TOKEN(Kind::FLOAT_LITERAL, _SOURCE_TEXT(cursor, start), if_digit);
@@ -96,12 +127,12 @@ WHEEL_LEXER_NAMESPACE
         if(is_exponent_marker(cursor.first())) {
             cursor.bump();
 
-            while(is_sign(cursor.first())) cursor.bump();
-            while(is_digit(cursor.first())) cursor.bump();
+            _WHEEL_CONSUME_ALL_IF(is_sign(cursor.first()), cursor);
+            _WHEEL_CONSUME_ALL_IF(is_digit(cursor.first()), cursor);
             _WHEEL_MAKE_TOKEN(Kind::FLOAT_LITERAL, _SOURCE_TEXT(cursor, start), if_digit);
         }
 
-        return make_token(Kind::INT_LITERAL, _SOURCE_TEXT(cursor, start), start, cursor.position());
+        _WHEEL_MAKE_TOKEN(Kind::INT_LITERAL, _SOURCE_TEXT(cursor, start), if_digit);
     }
 
     _WHEEL_HANDLERS(if_space) {
@@ -203,6 +234,9 @@ WHEEL_LEXER_NAMESPACE
         table[' ']  = if_space;
         table['/']  = if_slash;
 
+        table['\"'] = if_string_literal;
+        table['r']  = if_raw_string_literal;
+
         /* Operator(s) */
         table['=']  = if_equal;
         table['+']  = if_plus;
@@ -210,11 +244,13 @@ WHEEL_LEXER_NAMESPACE
         table['*']  = if_star;
 
         for(int character = 0; character < 256; character++) {
-            if(is_ident_start(static_cast<char>(character))) {
+            char char_str = static_cast<char>(character);
+
+            if(is_ident_start(char_str) && !is_special_ident(char_str)) {
                 table[character] = if_ident;
             }
 
-            if (is_digit(static_cast<char>(character))) {
+            if (is_digit(char_str)) {
                 table[character] = if_digit;
             }
         }
