@@ -54,7 +54,7 @@ WHEEL_LEXER_NAMESPACE
 
             while(true) {
                 auto closed_str = cursor.bump();
-                if (closed_str == '\"' || closed_str == '\0') break;
+                if (closed_str == '\"' || is_eof(closed_str)) break;
             }
 
             _WHEEL_MAKE_TOKEN(TokenKind::RAW_STRING_LITERAL, _SOURCE_TEXT(cursor, start), if_string_literal);
@@ -145,33 +145,32 @@ WHEEL_LEXER_NAMESPACE
         cursor.bump();
 
         const char second = cursor.first();
-        if(second != '/' && second != '*') {
+        if(WHEEL_STR_UNLIKELY(second, '/') && WHEEL_STR_UNLIKELY(second, '*')) {
             _WHEEL_MAKE_TOKEN(Kind::SLASH, _SOURCE_TEXT(cursor, start), if_slash);
         }
 
         switch(second) {
             case '/': {
                 const char third  = cursor.second();
-                bool       is_doc = (third == '/');
-
-                Kind       kind   = is_doc ? Kind::DOCUMENT_COMMENT : Kind::COMMENT;
-
-                cursor.bump();
-                if (is_doc) cursor.bump();
-
-                while(!cursor.is_eof() && !is_newline_like(cursor.first())) {
+                if(WHEEL_STR_LIKELY(third, '/')) {
                     cursor.bump();
+                    
+                    _WHEEL_CONSUME_ALL_IF(
+                        !cursor.is_eof() && !is_newline_like(cursor.first()),
+                        cursor
+                    );
+                    _WHEEL_MAKE_TOKEN(Kind::DOCUMENT_COMMENT, _SOURCE_TEXT(cursor, start), if_slash);
                 }
-
-                _WHEEL_MAKE_TOKEN(kind, _SOURCE_TEXT(cursor, start), if_slash);
             }
 
             case '*': {
-                Kind kind = Kind::COMMENT;
                 cursor.bump();
 
                 while (!cursor.is_eof()) {
-                    if (cursor.first() == '*' && cursor.second() == '/') {
+                    const char first  = cursor.first();
+                    const char second = cursor.second();
+
+                    if (WHEEL_STR_LIKELY(first, '*') && WHEEL_STR_LIKELY(second, '/')) {
                         cursor.bump();
                         cursor.bump();
 
@@ -180,19 +179,19 @@ WHEEL_LEXER_NAMESPACE
 
                     cursor.bump();
                 }
-
-                return make_token(kind, _SOURCE_TEXT(cursor, start), start, cursor.position());
+                
+                _WHEEL_MAKE_TOKEN(Kind::COMMENT, _SOURCE_TEXT(cursor, start), if_slash);
             }
         }
 
-        return make_token(Kind::ERROR, _SOURCE_TEXT(cursor, start), start, cursor.position());
+       _WHEEL_MAKE_TOKEN(Kind::IDENT, _SOURCE_TEXT(cursor, start), if_slash);
     }
 
     _WHEEL_HANDLERS(if_plus) {
         cursor.bump();
 
         auto next = cursor.first();
-        if(next == '+') {
+        if(WHEEL_STR_LIKELY(next, '+')) {
             cursor.bump();
             _WHEEL_MAKE_TOKEN(Kind::PLUS_PLUS, _SOURCE_TEXT(cursor, start), if_plus);
         }
