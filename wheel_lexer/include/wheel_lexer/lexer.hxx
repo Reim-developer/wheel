@@ -33,7 +33,7 @@ WHEEL_LEXER_NAMESPACE
                 source_map.build_table(source_text);
             }
 
-            WHEEL_ALWAYS_INLINE_NODISCARD Token next_token() {
+            WHEEL_ALWAYS_INLINE_NODISCARD Token next_token() noexcept {
                 if(cursor.is_eof()) {
                     return make_eof(cursor.position());
                 }
@@ -59,7 +59,7 @@ WHEEL_LEXER_NAMESPACE
                 }
 
                 cursor.bump();
-                return make_error(start, StringView(&character, 1));
+                return make_identifier_fallback(start, StringView(&character, 1));
             }
 
         WHEEL_ALWAYS_INLINE_NODISCARD SourceLocation get_source_location(const Token &token) noexcept {
