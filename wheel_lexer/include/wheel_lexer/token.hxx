@@ -36,10 +36,6 @@ WHEEL_LEXER_NAMESPACE
             return kind == TokenKind::EOF_;
         }
 
-        [[nodiscard]] bool is_error() const noexcept {
-            return kind == TokenKind::ERROR;
-        }
-
         [[nodiscard]] bool is_one_of(__Kind kind1, __Kind kind2) const noexcept {
             return kind == kind1 || kind == kind2;
         }
@@ -66,10 +62,10 @@ WHEEL_LEXER_NAMESPACE
         };
     }
 
-    [[nodiscard]] constexpr Token make_error(size_t pos, StringView error_details) {
+    [[nodiscard]] constexpr Token make_identifier_fallback(size_t pos, StringView source_text) {
         return Token {
-            TokenKind::ERROR,
-            error_details,
+            TokenKind::IDENT,
+            source_text,
             pos, pos + 1
         };
     }
