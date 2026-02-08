@@ -38,12 +38,12 @@ TEST(test_normal_comment_with_newline)
 DONE
 
 TEST(test_comment_error)
-    const char *source = "/* bad comment without close";
+    const char *source = "/*** bad comment without close";
 
     Lexer lexer(source);
     auto token = lexer.next_token();
 
-    VERIFY_THIS(TokenKind::COMMENT).token_str_eq_to(token, "/* bad comment without close", STR_LEN(source));
+    VERIFY_THIS(TokenKind::COMMENT).token_str_eq_to(token, "/*** bad comment without close", STR_LEN(source));
     VERIFY_THIS(TokenKind::COMMENT).token_as(token.kind);
     VERIFY_THIS(TokenKind::COMMENT).token_metadata_eq_to(lexer.get_source_location(token), 1, 1, 0);
 DONE
