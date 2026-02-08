@@ -4,6 +4,9 @@
 #include <string_view>
 #include <cstddef>
 
+#define WHEEL_STR_LIKELY(str1, str2)   str1 == str2
+#define WHEEL_STR_UNLIKELY(str1, str2) str1 != str2
+
 #if defined(__clang__) || defined(__GNUC__)
     #define WHEEL_ALWAYS_INLINE                             __attribute__((always_inline))
     #define WHEEL_COMPTIME_NODISCARD_INLINE [[nodiscard]]   __attribute__((always_inline)) constexpr
