@@ -53,6 +53,10 @@ WHEEL_LEXER_NAMESPACE
         return is_ident_start(character) || is_digit(character);
     }
 
+    WHEEL_COMPTIME_NODISCARD_INLINE bool is_special_ident(char character) noexcept {
+        return character == 'r';
+    }
+
     WHEEL_COMPTIME_NODISCARD_INLINE bool starts_with(String str, StrView prefix) noexcept {
         return str.size() >= prefix.size() && 
             std::equal(prefix.begin(), prefix.end(), str.begin());
