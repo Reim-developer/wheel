@@ -74,6 +74,10 @@ WHEEL_LEXER_NAMESPACE
         return character == 'E' || character == 'e';
     }
 
+    WHEEL_COMPTIME_NODISCARD_INLINE bool is_eof(char character) noexcept {
+        return character == '\0';
+    }
+
 END_NAMESPACE 
 
 #endif // UTILS_HXX
