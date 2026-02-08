@@ -31,6 +31,8 @@ WHEEL_LEXER_NAMESPACE
         FLOAT_LITERAL,
         /* `"Hello World"` */
         STRING_LITERAL,
+        /*  `r#"Hello World with my raw string"`*/
+        RAW_STRING_LITERAL,
         /* `=` */
         EQUAL,
         /* `+` */
@@ -80,6 +82,7 @@ WHEEL_LEXER_NAMESPACE
             case TokenKind::INT_LITERAL:        return "INT_LITERAL";
             case TokenKind::FLOAT_LITERAL:      return "FLOAT_LITERAL";
             case TokenKind::STRING_LITERAL:     return "STRING_LITERAL";
+            case TokenKind::RAW_STRING_LITERAL: return "RAW_STRING_LITERAL";
             case TokenKind::EQUAL:              return "EQUAL";
             case TokenKind::PLUS:               return "PLUS";
             case TokenKind::PLUS_PLUS:          return "PLUS_PLUS";
