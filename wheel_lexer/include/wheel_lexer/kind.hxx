@@ -8,10 +8,11 @@
 WHEEL_LEXER_NAMESPACE 
     enum class TokenKind : uint8_t {
         EOF_,
-        ERROR,
-
+        /* `\t` */
         TAB,
+        /* `\n` */
         NEWLINE,
+        /* ` ` */
         SPACE,
 
         /*
@@ -72,7 +73,6 @@ WHEEL_LEXER_NAMESPACE
     WHEEL_COMPTIME_NODISCARD_INLINE const char* to_string(TokenKind token_kind) noexcept {
         switch (token_kind) {
             case TokenKind::EOF_:               return "EOF";
-            case TokenKind::ERROR:              return "ERROR";
             case TokenKind::TAB:                return "TAB";
             case TokenKind::SPACE:              return "SPACE";
             case TokenKind::COMMENT:            return "COMMENT";
