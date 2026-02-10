@@ -8,9 +8,9 @@
 #define WHEEL_STR_UNLIKELY(str1, str2) str1 != str2
 
 #if defined(__clang__) || defined(__GNUC__)
-    #define WHEEL_ALWAYS_INLINE                             __attribute__((always_inline))
-    #define WHEEL_COMPTIME_NODISCARD_INLINE [[nodiscard]]   __attribute__((always_inline)) constexpr
-    #define WHEEL_ALWAYS_INLINE_NODISCARD  [[nodiscard]]   __attribute__((always_inline))
+    #define WHEEL_ALWAYS_INLINE                             __attribute__((always_inline)) inline
+    #define WHEEL_COMPTIME_NODISCARD_INLINE [[nodiscard]]   __attribute__((always_inline)) inline constexpr
+    #define WHEEL_ALWAYS_INLINE_NODISCARD  [[nodiscard]]   __attribute__((always_inline))  inline
 
 #elif defined(_MSC_VER)
     #define WHEEL_ALWAYS_INLINE                                          __forceinline
