@@ -1,0 +1,1 @@
+setup_wheel_test(parser_arena_test parser_arena_test.cxx)
