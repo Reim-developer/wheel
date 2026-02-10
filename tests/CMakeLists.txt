@@ -10,14 +10,15 @@ function (setup_wheel_test test_name test_source)
     target_include_directories(
         ${test_name}
         PRIVATE
-            ${CMAKE_SOURCE_DIR}/src
             ${CMAKE_SOURCE_DIR}/tests  
             ${CMAKE_SOURCE_DIR}/wheel_lexer
             ${CMAKE_SOURCE_DIR}/wheel_utils
+            ${CMAKE_SOURCE_DIR}/wheel_parser
     )
 
     target_link_libraries(${test_name} PRIVATE wheel_lexer)
     target_link_libraries(${test_name} PRIVATE wheel_utils)
+    target_link_libraries(${test_name} PRIVATE wheel_parser)
     set_property(TARGET ${test_name} PROPERTY CXX_STANDARD 20)
 
     set_target_properties(
@@ -29,4 +30,4 @@ endfunction()
 
 add_subdirectory(lexer_tests)
 add_subdirectory(analyzer_tests)
-setup_wheel_test(allocator_test allocator_test.cxx)
+add_subdirectory(parser_tests)
