@@ -13,10 +13,6 @@
 #include <cstring>
 
 #define CURRENT std::source_location::current()
-#define TEST(name) void name() { \
-    std::cout << std::format("[TEST] '{}'", #name) << "\n";
-
-#define DONE }
 #define RUN_TEST(test) test();
 
 #define TEST_ENTRY int main() { 
