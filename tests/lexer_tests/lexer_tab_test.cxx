@@ -1,4 +1,5 @@
 #include "__lexer_test_helper/__helper.hxx"
+#include <__internal/__assert.hxx>
 #include <wheel_lexer/lexer.hxx>
 
 using wheel_lexer::Lexer;

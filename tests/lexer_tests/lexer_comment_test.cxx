@@ -1,5 +1,6 @@
 #include "__lexer_test_helper/__helper.hxx"
 #include <wheel_lexer/lexer.hxx>
+#include <__internal/__assert.hxx>
 
 using wheel_lexer::Lexer;
 using wheel_lexer::TokenKind;
