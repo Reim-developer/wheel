@@ -6,7 +6,6 @@
 #include <algorithm>
 #include "aliases.hxx"
 #include "__wheel_lexer_config.hxx"
-#include <wheel_utils/logging.hxx>
 
 WHEEL_LEXER_NAMESPACE
 
