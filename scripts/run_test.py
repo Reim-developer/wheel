@@ -10,7 +10,6 @@ from lib 		import die, StatusCode, cout, cerr
 from typing 	import Optional
 
 class __CMakeBuildTarget(StrEnum):
-	ALLOCATOR_TEST 				= "allocator_test"
 	TAB_ANALYZER_TEST   		= "tab_analyzer_test"
 	LEXER_EOF_TEST 	 			= "lexer_eof_test"
 	LEXER_NEWLINE_TEST  		= "lexer_newline_test"
@@ -20,6 +19,7 @@ class __CMakeBuildTarget(StrEnum):
 	LEXER_CURSOR_TEST   		= "lexer_cursor_test"
 	LEXER_OPERATOR_TEST 		= "lexer_operator_test"
 	LEXER_LITERAL_TEST 			= "lexer_literal_test"
+	PARSER_ARENA_TEST 			= "parser_arena_test"
 
 class __TargetConfig(StrEnum):
 	DEBUG = "Debug"
