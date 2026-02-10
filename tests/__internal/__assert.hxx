@@ -6,6 +6,7 @@
 #include <cstring>
 #include <string>
 #include <random>
+#include <format>
 
 using std::cerr;
 using std::cout;
@@ -46,6 +47,9 @@ using std::uniform_int_distribution;
             cerr << "File: " << __FILE__ << "\n"; \
             cerr << "Line: " << __LINE__ << "\n"; \
             abort(); \
+        } else { \
+            const auto fmt = std::format("[OK] [{}:{}]", BASE_NAME(__FILE__),  __LINE__); \
+            std::cout << fmt << std::format(" {} is {}\n", #condition, condition); \
         } \
     } while(0)
 
@@ -107,5 +111,14 @@ string rand_source_digits(
 
     return results;
 }
+
+#define TEST(func_name) void func_name() { \
+    std::cout << std::format("[TEST] {}", #func_name) << "\n";
+
+#define DONE }
+#define RUN(func) func();
+
+#define TEST_MAIN int main() { 
+#define END_MAIN return 0; }
 
 #endif // __ASSERT_HXX
