@@ -1,7 +1,8 @@
 #if !defined(CONFIG_HXX)
 #define CONFIG_HXX
 
-#define WHEEL_PARSER_NAMESPACE namespace wheel_parser {
+#define WHEEL_PARSER_NAMESPACE      namespace wheel_parser {
+#define WHEEL_PARSER_AST_NAMESPACE  namespace wheel_parser::ast {
 #define WHEEL_PARSER_END_NAMESPACE }
 
 #if defined(_MSC_VER)
