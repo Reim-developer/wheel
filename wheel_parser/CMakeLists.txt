@@ -11,6 +11,7 @@ target_sources(wheel_parser
             include/wheel_parser/config.hxx
             include/wheel_parser/allocator.hxx
             include/wheel_parser/parser.hxx
+            include/wheel_parser/ast/symbol.hxx
 )
 
 target_include_directories(
