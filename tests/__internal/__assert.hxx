@@ -37,6 +37,17 @@ using std::uniform_int_distribution;
         << content << "\n"; \
     } while(0)
 
+#define assert_eq(x, y) \
+    do { \
+        if ((x != y)) { \
+            cerr << "\n"; \
+            cerr << std::format("{} is not equal of: {}", #x, #y); \
+            abort(); \
+        } else { \
+            cout << std::format("{} is equal of: {}\n", #x, #y); \
+        }\
+    } while(0);
+
 #define internal_assert(condition, message) \
     do { \
         if (!(condition)) { \
