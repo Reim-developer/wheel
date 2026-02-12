@@ -28,26 +28,26 @@ WHEEL_LEXER_NAMESPACE
                         kind(kind), str(str), start(start),
                         end(end) {}
         
-        [[nodiscard]] bool is(__Kind kind_) const noexcept {
+        [[nodiscard]] inline bool is(__Kind kind_) const noexcept {
             return kind == kind_;
         }
         
-        [[nodiscard]] bool is_eof() const noexcept {
+        [[nodiscard]] inline bool is_eof() const noexcept {
             return kind == TokenKind::EOF_;
         }
 
-        [[nodiscard]] bool is_one_of(__Kind kind1, __Kind kind2) const noexcept {
+        [[nodiscard]] inline bool is_one_of(__Kind kind1, __Kind kind2) const noexcept {
             return kind == kind1 || kind == kind2;
         }
 
        
-        [[nodiscard]] bool text_is(StringView str_) const noexcept {
+        [[nodiscard]] inline bool text_is(StringView str_) const noexcept {
             return str == str_;
         }
     };
 
 
-    [[nodiscard]] Token make_token(__Kind kind, StringView str, 
+    [[nodiscard]] inline Token make_token(__Kind kind, StringView str, 
                     size_t start, size_t end) {
         
         return Token {
@@ -55,14 +55,14 @@ WHEEL_LEXER_NAMESPACE
         };
     }
 
-    [[nodiscard]] Token make_eof(size_t pos) {
+    [[nodiscard]] inline Token make_eof(size_t pos) {
         return Token {
             TokenKind::EOF_,
             "", pos, pos
         };
     }
 
-    [[nodiscard]] constexpr Token make_identifier_fallback(size_t pos, StringView source_text) {
+    [[nodiscard]] inline constexpr Token make_identifier_fallback(size_t pos, StringView source_text) {
         return Token {
             TokenKind::IDENT,
             source_text,
