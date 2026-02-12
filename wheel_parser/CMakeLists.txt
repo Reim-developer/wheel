@@ -3,6 +3,7 @@ add_library(wheel_parser STATIC)
 target_sources(wheel_parser
     PRIVATE 
         parser.cxx
+        nodes.cxx
 
     PUBLIC
         FILE_SET    HEADERS
@@ -12,6 +13,7 @@ target_sources(wheel_parser
             include/wheel_parser/allocator.hxx
             include/wheel_parser/parser.hxx
             include/wheel_parser/ast/symbol.hxx
+            include/wheel_parser/ast/nodes.hxx
 )
 
 target_include_directories(
