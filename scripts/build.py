@@ -1,95 +1,104 @@
 #! /usr/bin/python
-from sys 			import argv
-from os.path 		import basename
-from lib			import (
-	cout, BuildOptions, die, StatusCode, working_dir,
-	change_dir_to, cerr, create_dir, BuildExtraOptions
+
+from lib 		import (
+	gen_or_read_options, die, cerr, StatusCode, Options,
+	working_dir, change_dir_to, create_dir, cout
 )
-from pathlib		import Path
-from subprocess		import run
+from pathlib 	import Path
+from subprocess	import run
+from shutil 	import rmtree
 
-def show_help() -> None:
-	cout((
-		f"[?] Usage: {basename(__file__)} [Build Option]\n"
-		f"[+] Available Build Option {(" | ".join(BuildOptions.__members__))}"
-	))
+VALID_COMPILER = ["clang++", "g++", "default"]
+VALID_MODE 	   = ["debug", "release"]
+VALID_VERBOSE  = [True, False]
 
-def build_from_mode(mode: str, build_option: str, 
-					refesh_cache: bool, verbose: bool) -> None:
-	scripts_dir = "scripts"
-	current_dir = working_dir()
+def build_from_options(options: Options) -> None:
+	verbose  = options.build_options.verbose  if options.build_options.verbose	in VALID_VERBOSE else True
+	mode 	 = options.build_options.mode 	  if options.build_options.mode     in VALID_MODE     else "debug"
 
-	if current_dir == scripts_dir:
-		try:
-			change_dir_to("..")
+	cmake_build_type = mode.capitalize()
 
-		except Exception as error:
-			cerr(f"Cannot change directory to '{scripts_dir}', error: {error}")
-			die(StatusCode.CHANGE_DIR_FAILED)
+	build_args = ["cmake", "--build", ".", "--config", cmake_build_type]
+	if verbose:
+		build_args.append("--verbose")
 
-	build_path = Path("build")
-	if not build_path.exists():
-		try:
-			create_dir(build_path)
+	run(build_args)
 
-		except Exception as error:
-			cerr(f"Create '{build_path}' failed, error: {error}")
-			die(StatusCode.CREATE_DIR_FAILED)
+def config_cmake_from_options(options: Options) -> None:
+	compiler = options.build_options.compiler if options.build_options.compiler in VALID_COMPILER else "default"	
+	args = ["cmake", "-S", "..", "-B", "." ]
 
+	if compiler != "default":
+		COMPILER_MAP = {
+			"clang++": ("clang", "clang++"),
+			"g++": ("gcc", "g++")
+		}
+		cout(f"Selected C++ Compiler as {compiler}")
+		c_compiler, cxx_compiler = COMPILER_MAP[compiler]
+
+		args.extend([
+			"-G", "Ninja", 
+			f"-DCMAKE_C_COMPILER={c_compiler}",
+			f"-DCMAKE_CXX_COMPILER={cxx_compiler}"
+		])
+
+	run(args)
+
+def match_directory() -> None:
+	current = working_dir()
+	if current == "scripts":
+		change_dir_to("..")
+
+	build = Path("build")
+	if not build.exists():
+		create_dir(build)
+
+	change_dir_to(build)
+
+def try_read_or_generate_cfg() -> Options:
+	cfg_file = "cfg.json"
 	try:
-		change_dir_to(build_path)
-	except Exception as error:
-		cerr(f"Cannot change directory to '{scripts_dir}', error: {error}")
-		die(StatusCode.CHANGE_DIR_FAILED)
-
-	if not Path("CMakeCache.txt").exists() or refesh_cache:
-		try:
-
-			run(["cmake", f"-D{build_option}=ON", ".."])
-
-		except Exception as error:
-			cerr(f"Failed to build from CMake, with error: {error}")
-			die(StatusCode.SUBPROCESS_FAILED)
-
-	try:
-		build_args = ["cmake", "--build", ".", f"--config", mode]
-		if verbose:
-			build_args.append("--verbose")
-			
-		run(build_args)
+		options = gen_or_read_options(cfg_file)
+		return options
 
 	except Exception as error:
-		cerr(f"Failed to build from CMake, with error: {error}")
-		die(StatusCode.SUBPROCESS_FAILED)
+		cerr(f"Cannot generate or read {cfg_file}, error: {error}")
+		die(StatusCode.CONFIG_LOAD_FAILED)
 
-def parse_from_cli() -> None:
-	if len(argv) < 2:
-		show_help()
-		die(StatusCode.MISSING_ARGUMENT)
+def refesh_by_options(options: Options, build_dir: Path | str) -> None:
+	valid_refesh_option = [True, False]
+	if options.extra.refresh_cache not in valid_refesh_option:
+		options.extra.refresh_cache = False
 	
-	if argv[1].upper() not in BuildOptions.__members__:
-		show_help()
-		die(StatusCode.ARGUMENT_NOT_FOUND)
+	build_dir = Path(build_dir) if isinstance(build_dir, str) else build_dir
+	if options.extra.refresh_cache:
+		try:
+			if build_dir.exists():
+				cout(f"Refesh cache from build dir: {build_dir.absolute()}")
+				rmtree(build_dir)
 
-	refesh_cache = False
-	verbose 	 = False
-	if len(argv) > 2:
-		match argv[2]:
-			case BuildExtraOptions.REFESH_CACHE:
-				refesh_cache = True
-			
-			case BuildExtraOptions.VERBOSE:
-				verbose 	 = True
+		except Exception as error:
+			cerr(f"Cannot refesh cache, error: {error}")
+			die(StatusCode.REMOVE_PATH_FAILED)
 
-			case _:
-				cout((
-					f"[+] Extra argument not found: {argv[2]}\n"
-					f"[+] Available argument(s):\n"
-					f"[+] {(" | ".join(BuildExtraOptions.__members__.values()))}"
-				))
-				die(StatusCode.ARGUMENT_NOT_FOUND)
+def base_dir() -> Path:
+	base_directory = Path(".").resolve()
+	if base_directory.name == "scripts":
+		base_directory = base_directory.parent
 
-	build_mode = "Debug" if argv[1].upper() == BuildOptions.WHEEL_DEBUG else "Release"
-	build_from_mode(build_mode, argv[1], refesh_cache, verbose)
+	return base_directory / Path("build")
 
-parse_from_cli()
+def main() -> None:
+	options 	= try_read_or_generate_cfg()
+	refesh_by_options(options, base_dir())
+
+	match_directory()
+
+	config_cmake_from_options(options)
+	build_from_options(options)
+
+try:
+	main()
+except KeyboardInterrupt:
+	cerr("Canceled.")
+	die(StatusCode.CANCELED)
