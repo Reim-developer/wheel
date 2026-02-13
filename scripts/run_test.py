@@ -48,7 +48,8 @@ def __gen_cmake() -> None:
 			cerr(f"Cannot generate cmake, error: {error}")
 			die(code = StatusCode.GENERATE_CMAKE_FAILED)
 
-def __cmake_build_target(target: str, config: __TargetConfig) -> None:
+
+def __cmake_build_target(target: str, config: __TargetConfig, compiler_target: Optional[str] = None) -> None:
 	try:
 		run(args = ["cmake", "--build", ".", "--target", target, "--config", config])
 
