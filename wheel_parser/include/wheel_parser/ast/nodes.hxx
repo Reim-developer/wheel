@@ -12,7 +12,10 @@ using wheel_lexer::Token;
 WHEEL_PARSER_AST_NAMESPACE
     enum class NodeKind : uint8_t {
         FunctionDeclaration,
-        BlockStatement
+        BlockStatement,
+        LiteralExpression,
+        IdentifierExpression,
+        VariableDeclaration
     };
 
     struct Node {
@@ -46,6 +49,31 @@ WHEEL_PARSER_AST_NAMESPACE
 
         explicit BlockStatement(const Token *token,
                                 std::vector<StatementNode*> statements) noexcept;
+    };
+
+    struct ExpressionNode : Node {
+        protected:
+            explicit ExpressionNode(NodeKind node_kind, const Token *token) noexcept;
+    };
+
+    struct LiteralExpression final : ExpressionNode {
+        explicit LiteralExpression(const Token *token) noexcept;
+    };
+
+    struct IdentifierExpression final : ExpressionNode {
+        SymbolID identifier_id;
+
+        explicit IdentifierExpression(const Token *token, SymbolID identifier_id) noexcept;
+    };
+
+    struct VariableDeclaration final : StatementNode {
+        SymbolID var_type;
+        SymbolID var_name;
+        ExpressionNode *initializer;
+
+        explicit VariableDeclaration(const Token *token,
+                                    SymbolID var_type, SymbolID var_name,
+                                    ExpressionNode *initializer) noexcept;
     };
 
 WHEEL_PARSER_END_NAMESPACE
