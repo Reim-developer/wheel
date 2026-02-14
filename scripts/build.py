@@ -8,9 +8,10 @@ from pathlib 	import Path
 from subprocess	import run
 from shutil 	import rmtree
 
-VALID_COMPILER = ["clang++", "g++", "default"]
-VALID_MODE 	   = ["debug", "release"]
-VALID_VERBOSE  = [True, False]
+VALID_COMPILER 			= ["clang++", "g++", "default"]
+VALID_MODE 	   			= ["debug", "release"]
+VALID_VERBOSE  			= [True, False]
+VALID_COMPILER_COMMANDS = [True, False]
 
 def build_from_options(options: Options) -> None:
 	verbose  = options.build_options.verbose  if options.build_options.verbose	in VALID_VERBOSE else True
@@ -25,7 +26,8 @@ def build_from_options(options: Options) -> None:
 	run(build_args)
 
 def config_cmake_from_options(options: Options) -> None:
-	compiler = options.build_options.compiler if options.build_options.compiler in VALID_COMPILER else "default"	
+	compiler = options.build_options.compiler 			if options.build_options.compiler in VALID_COMPILER else "default"	
+	compiler_commands = options.extra.compiler_commands if options.extra.compiler_commands in VALID_COMPILER_COMMANDS else False
 	args = ["cmake", "-S", "..", "-B", "." ]
 
 	if compiler != "default":
@@ -41,6 +43,9 @@ def config_cmake_from_options(options: Options) -> None:
 			f"-DCMAKE_C_COMPILER={c_compiler}",
 			f"-DCMAKE_CXX_COMPILER={cxx_compiler}"
 		])
+
+	if compiler_commands:
+		args.append(f"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
 
 	run(args)
 
