@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <utility>
 #include "wheel_parser/config.hxx"
-#include "wheel_parser/allocator.hxx"
 
 WHEEL_PARSER_AST_NAMESPACE
     using SymbolID = uint32_t;
