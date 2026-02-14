@@ -5,7 +5,6 @@
 #include <__internal/__assert.hxx>
 
 using std::string;
-using std::move;
 using std::format;
 using wheel_parser::ast::StringInterner;
 using wheel_parser::ast::INVALID_SYMBOL_ID;
@@ -36,7 +35,7 @@ TEST(test_symbol_interner_move_edge)
     auto id1 = source.intern("alpha");
     auto id2 = source.intern("beta");
     
-    StringInterner moved(move(source));
+    StringInterner moved(std::move(source));
     internal_assert(moved.resolve(id1) == "alpha", "moved interner should preserve alpha");
     internal_assert(moved.resolve(id2) == "beta", "moved interner should preserve beta");
     internal_assert(moved.intern("alpha") == id1, "moved interner should preserve dedup index");
