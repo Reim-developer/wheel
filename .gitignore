@@ -4,3 +4,5 @@ __pycache__
 QWEN.md
 .qwen
 cfg.json
+.cache
+compile_commands.json
