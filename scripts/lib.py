@@ -54,7 +54,8 @@ class BuildOptions:
 
 @dataclass
 class Extra:
-	refresh_cache: bool = False
+	refresh_cache: 		bool = False
+	compiler_commands: 	bool = False
 
 @dataclass()
 class Options:
@@ -80,4 +81,7 @@ def gen_or_read_options(cfg_path: str | Path) -> Options:
 		verbose 	= build_options_dict.get("verbose", True),
 		mode 		= build_options_dict.get("mode", "debug"),
 		compiler 	= build_options_dict.get("compiler", "default")
-	), Extra (refresh_cache = extra_dict.get("refresh-cache", False)))
+	), Extra (
+		refresh_cache 		= extra_dict.get("refresh-cache", False),
+		compiler_commands	= extra_dict.get("compiler-commands", False)
+	))
