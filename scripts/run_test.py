@@ -20,7 +20,7 @@ class __CMakeBuildTarget(StrEnum):
 	LEXER_OPERATOR_TEST 		= "lexer_operator_test"
 	LEXER_LITERAL_TEST 			= "lexer_literal_test"
 	PARSER_ARENA_TEST 			= "parser_arena_test"
-	PARSE_SYMBOL_INTERNER_TEST  = "parser_symbol_interner_test"
+	PARSER_SYMBOL_INTERNER_TEST = "parser_symbol_interner_test"
 	PARSER_AST_TEST 			= "parser_ast_test"
 
 class __TargetConfig(StrEnum):
