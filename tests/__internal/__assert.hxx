@@ -6,7 +6,8 @@
 #include <cstring>
 #include <string>
 #include <random>
-#include <format>
+#include <format> // IWYU pragma: keep
+#include <wheel_lexer/token.hxx>
 
 using std::cerr;
 using std::cout;
@@ -16,6 +17,7 @@ using std::string;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
+using wheel_lexer::TokenKind;
 
 #if defined(_MSC_VER)
     #pragma warning(disable: 4806)
@@ -28,6 +30,11 @@ using std::uniform_int_distribution;
     #define BASE_NAME(path) ((strrchr(path, '/')) ? strrchr(path, '/') + 1 : path)
 
 #endif 
+
+#define TOKEN(kind, arena)  arena.allocate<Token> ( \
+        kind, \
+        "dummy_token", 1, 1 \
+     )
 
 #define DEBUG_OUTPUT(content) \
     do { \
@@ -64,7 +71,7 @@ using std::uniform_int_distribution;
         } \
     } while(0)
 
-string random_str(size_t length) {
+inline string random_str(size_t length) {
     const char char_set[] = 
         "0123456789"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -85,7 +92,7 @@ string random_str(size_t length) {
     return result;
 }
 
-string rand_source_digits(
+inline string rand_source_digits(
         bool exponent   = false, bool negative = false,
         bool rand_float = false) {
     random_device                    random;
