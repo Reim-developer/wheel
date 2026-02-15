@@ -31,6 +31,8 @@ using wheel_lexer::TokenKind;
 
 #endif 
 
+#define NO_TEST(func_name) void func_name() {}
+
 #define TOKEN(kind, arena)  arena.allocate<Token> ( \
         kind, \
         "dummy_token", 1, 1 \
