@@ -25,6 +25,7 @@ def build_from_options(options: Options) -> None:
 
 	run(build_args)
 
+
 def config_cmake_from_options(options: Options) -> None:
 	compiler = options.build_options.compiler 			if options.build_options.compiler in VALID_COMPILER else "default"	
 	compiler_commands = options.extra.compiler_commands if options.extra.compiler_commands in VALID_COMPILER_COMMANDS else False
@@ -41,13 +42,20 @@ def config_cmake_from_options(options: Options) -> None:
 		args.extend([
 			"-G", "Ninja", 
 			f"-DCMAKE_C_COMPILER={c_compiler}",
-			f"-DCMAKE_CXX_COMPILER={cxx_compiler}"
+			f"-DCMAKE_CXX_COMPILER={cxx_compiler}",
 		])
 
 	if compiler_commands:
 		args.append(f"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
 
-	run(args)
+	if options.flags:
+		for flag in options.flags:
+			cmake_flag = f"-D{flag}=ON"
+
+			cout(f"Enabled flag: {cmake_flag}")
+			args.append(cmake_flag)
+
+	run(args, check = True)
 
 def match_directory() -> None:
 	current = working_dir()
