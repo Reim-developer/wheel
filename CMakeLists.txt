@@ -5,7 +5,27 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(WHEEL_DEBUG)
-    add_compile_definitions(WHEEL_DEBUG=1)
+    add_compile_definitions(WHEEL_DEBUG=ON)
+endif()
+
+if(WHEEL_ASSERTION)
+    add_compile_definitions(WHEEL_ASSERTION=ON)
+endif()
+
+if(WHEEL_SOURCE_LOCATION)
+    add_compile_definitions(WHEEL_SOURCE_LOCATION=ON)
+endif()
+
+if(WHEEL_EXPERIMENT)
+    add_compile_definitions(WHEEL_EXPERIMENT=ON)
+endif()
+
+if(WHEEL_NO_FAIL_FAST)
+    add_compile_definitions(WHEEL_NO_FAIL_FAST=ON)
+endif()
+
+if(WHEEL_TEST_BY_CONTEXT)
+    add_compile_definitions(WHEEL_TEST_BY_CONTEXT)
 endif()
 
 add_subdirectory(wheel_utils)
