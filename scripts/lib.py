@@ -1,6 +1,6 @@
 from sys 			import stdout, stderr
 from enum 			import StrEnum, IntEnum
-from typing 		import NoReturn
+from typing 		import NoReturn, Optional
 from os 			import getcwd, chdir, mkdir
 from pathlib		import Path
 from dataclasses	import dataclass, asdict
@@ -48,9 +48,9 @@ def remove(dir_or_path: str | Path) -> None:
 
 @dataclass
 class BuildOptions:
-	verbose: 	bool 	= True
-	mode: 	 	str 	= "Debug"
-	compiler: 	str 	= "default"
+	verbose: 	bool 		= True
+	mode: 	 	str 		= "Debug"
+	compiler: 	str 		= "default"
 
 @dataclass
 class Extra:
@@ -61,12 +61,13 @@ class Extra:
 class Options:
 	build_options: BuildOptions
 	extra: 		   Extra
+	flags: 		   Optional[list[str]]
 	 
 def gen_or_read_options(cfg_path: str | Path) -> Options:
 	path = cfg_path if isinstance(cfg_path, Path) else Path(cfg_path)
 
 	if not path.exists():
-		json = asdict(Options(BuildOptions(), Extra()))
+		json = asdict(Options(BuildOptions(), Extra(), flags = None))
 
 		with open(file = cfg_path, mode = "w", encoding = "utf-8") as new_file:
 			dump(json, new_file, indent = 4)
@@ -84,4 +85,4 @@ def gen_or_read_options(cfg_path: str | Path) -> Options:
 	), Extra (
 		refresh_cache 		= extra_dict.get("refresh-cache", False),
 		compiler_commands	= extra_dict.get("compiler-commands", False)
-	))
+	), flags = raw_dict.get("flags", None))
