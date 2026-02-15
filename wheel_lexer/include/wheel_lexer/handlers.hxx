@@ -64,14 +64,14 @@ WHEEL_LEXER_NAMESPACE
     }
 
     _WHEEL_HANDLERS(if_newline) {
-        if(cursor.first() == '\r' && cursor.second() == '\n') {
+        if(cursor.first() == '\r' && cursor.second() == '\n') [[likely]] {
             cursor.bump();
             cursor.bump();
 
             return make_token(Kind::NEWLINE, "\r\n", start, cursor.position());
         }
 
-        if(cursor.first() == '\r') {
+        if(cursor.first() == '\r') [[likely]] {
             cursor.bump();
             return make_token(Kind::NEWLINE, "\r", start, cursor.position());
         }
@@ -85,12 +85,12 @@ WHEEL_LEXER_NAMESPACE
 
         auto next = cursor.first();
         switch(next) {
-            case '=': {
+            case '=': [[likely]] {
                 cursor.bump();
                 _WHEEL_MAKE_TOKEN(Kind::EQUAL_EQUAL, _SOURCE_TEXT(cursor, start), if_equal);
             }
 
-            case '>': {
+            case '>': [[likely]] {
                 cursor.bump();
                 _WHEEL_MAKE_TOKEN(Kind::FAT_ARROW, _SOURCE_TEXT(cursor, start), if_equal);
             }
@@ -145,14 +145,14 @@ WHEEL_LEXER_NAMESPACE
         cursor.bump();
 
         const char second = cursor.first();
-        if(WHEEL_STR_UNLIKELY(second, '/') && WHEEL_STR_UNLIKELY(second, '*')) {
+        if(second != '/' && second != '*') [[likely]] {
             _WHEEL_MAKE_TOKEN(Kind::SLASH, _SOURCE_TEXT(cursor, start), if_slash);
         }
 
         switch(second) {
             case '/': {
                 const char third  = cursor.second();
-                if(WHEEL_STR_LIKELY(third, '/')) {
+                if WHEEL_STR_LIKELY(third, '/') {
                     cursor.bump();
                     
                     _WHEEL_CONSUME_ALL_IF(
@@ -170,7 +170,7 @@ WHEEL_LEXER_NAMESPACE
                     const char first  = cursor.first();
                     const char second = cursor.second();
 
-                    if (WHEEL_STR_LIKELY(first, '*') && WHEEL_STR_LIKELY(second, '/')) {
+                    if (first == '/' && second == '*') [[likely]] {
                         cursor.bump();
                         cursor.bump();
 
@@ -191,7 +191,7 @@ WHEEL_LEXER_NAMESPACE
         cursor.bump();
 
         auto next = cursor.first();
-        if(WHEEL_STR_LIKELY(next, '+')) {
+        if WHEEL_STR_LIKELY(next, '+') {
             cursor.bump();
             _WHEEL_MAKE_TOKEN(Kind::PLUS_PLUS, _SOURCE_TEXT(cursor, start), if_plus);
         }
@@ -257,7 +257,7 @@ WHEEL_LEXER_NAMESPACE
         return table;
     }();
 
-    [[nodiscard]] TokenHandler get_handler(char character) {
+    [[nodiscard]] inline TokenHandler get_handler(char character) {
         unsigned char uc = static_cast<unsigned char>(character);
 
         return HANDLERS[uc];
