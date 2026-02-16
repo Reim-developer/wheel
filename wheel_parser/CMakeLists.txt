@@ -10,7 +10,6 @@ target_sources(wheel_parser
         BASE_DIRS   include
         FILES
             include/wheel_parser/config.hxx
-            include/wheel_parser/allocator.hxx
             include/wheel_parser/parser.hxx
             include/wheel_parser/ast/symbol.hxx
             include/wheel_parser/ast/nodes.hxx
