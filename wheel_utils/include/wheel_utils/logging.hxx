@@ -31,19 +31,26 @@ WHEEL_UTILS_NAMESPACE
         #define WHEEL_BASE_NAME(path) ((std::strrchr(path, '/')) ? std::strrchr(path, '/') + 1 : path)
 #endif
 
-#if !defined (WHEEL_NO_FAIL_FAST)
-    #define NOT_NULL_CONTEXT void
-
-#else 
-    #define NOT_NULL_CONTEXT bool
+#if defined (WHEEL_ASSERTION) && defined (WHEEL_EXPERIMENT)
+    #if !defined (WHEEL_NO_FAIL_FAST)
+        #define NOT_NULL_CONTEXT void
+    #else 
+        #define NOT_NULL_CONTEXT bool
+    #endif 
 #endif 
 
 #if defined(WHEEL_ASSERTION)
-    #if CURRENT_CPP_VERSION < 202002L && defined (WHEEL_SOURCE_LOCATION)
+    #if defined (WHEEL_ASSERTION) 
+        #define USE_WHEEL_ASSERTION using wheel_utils::not_null;
+    #else 
+        #define USE_WHEEL_ASSERTION static_assert(true, "WHEEL_ASSERTION has been disabled.");
+    #endif
+
+    #if CURRENT_CPP_VERSION < 202002L && defined(WHEEL_SOURCE_LOCATION)
         #error "WHEEL_SOURCE_LOCATION only supports C++ version >= 20"
     #endif 
-
-    #if defined (WHEEL_SOURCE_LOCATION)
+    
+    #if defined(WHEEL_SOURCE_LOCATION) && !defined(WHEEL_EXPERIMENT)
         #include <type_traits> 
         #include <source_location>
 
@@ -62,7 +69,7 @@ WHEEL_UTILS_NAMESPACE
         }
     #endif  
 
-    #if defined (WHEEL_EXPERIMENT)
+    #if defined(WHEEL_EXPERIMENT)
         template<typename T>
         struct is_pointer {
             static const bool value = false;
@@ -83,9 +90,8 @@ WHEEL_UTILS_NAMESPACE
             if (ptr == nullptr) {
                 ::std::cerr << "Null pointer is not allowed in this context.\n";
 
-                #if !defined (WHEEL_NO_FAIL_FAST)
+                #if !defined(WHEEL_NO_FAIL_FAST)
                     ::std::abort();
-
                 #else 
                     return false;
                 #endif
@@ -109,6 +115,9 @@ WHEEL_UTILS_NAMESPACE
             }
          }
     #endif 
+
+#else 
+    #define not_null(T) (void)0
 #endif
 
 #if defined(WHEEL_DEBUG) 
