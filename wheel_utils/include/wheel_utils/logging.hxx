@@ -117,7 +117,7 @@ WHEEL_UTILS_NAMESPACE
     #endif 
 
 #else 
-    #define not_null(T) (void)0
+    #define USE_WHEEL_ASSERTION static_assert(true, "WHEEL_ASSERTION has been disabled.");
 #endif
 
 #if defined(WHEEL_DEBUG) 
