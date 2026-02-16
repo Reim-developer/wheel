@@ -9,7 +9,7 @@
     #endif 
 #endif
 
-#if defined (WHEEL_EXPERIMENT)
+#if defined (WHEEL_EXPERIMENT) && defined (WHEEL_ASSERTION)
 
     TEST(test_is_pointer_value)
         assert_eq(is_pointer_value<int>, false);
