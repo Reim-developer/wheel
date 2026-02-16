@@ -1,9 +1,12 @@
 #include <__internal/__assert.hxx>
 #include <wheel_utils/logging.hxx>
 
-#if defined (WHEEL_EXPERIMENT)
+#if defined (WHEEL_EXPERIMENT) && defined (WHEEL_ASSERTION)
     using wheel_utils::is_pointer_value;
-    using wheel_utils::not_null;
+
+    #if defined (WHEEL_NO_FAIL_FAST)
+        using wheel_utils::not_null;
+    #endif 
 #endif
 
 #if defined (WHEEL_EXPERIMENT)
