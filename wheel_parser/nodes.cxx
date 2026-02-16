@@ -1,6 +1,9 @@
 #include <vector>
 #include "wheel_parser/ast/nodes.hxx"
 #include "wheel_parser/ast/symbol.hxx"
+#include <wheel_utils/logging.hxx>
+
+USE_WHEEL_ASSERTION
 
 using wheel_parser::ast::Node;
 using wheel_parser::ast::StatementNode;
@@ -13,10 +16,14 @@ using wheel_parser::ast::IdentifierExpression;
 using wheel_parser::ast::VariableDeclaration;
 
 Node::Node(NodeKind node_kind, 
-        const Token* token) noexcept : node_kind(node_kind), token(token) {}
+        const Token* token) noexcept : node_kind(node_kind), token(token) {
+        not_null<const Token*>(token);
+}
 
 StatementNode::StatementNode(NodeKind node_kind,
-                             const Token *token) noexcept : Node(node_kind, token) {}
+                             const Token *token) noexcept : Node(node_kind, token) {
+        not_null<const Token*>(token);
+}
 
 FunctionDeclaration::FunctionDeclaration(const Token *token, 
                                         SymbolID func_name,
