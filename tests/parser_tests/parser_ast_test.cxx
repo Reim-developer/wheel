@@ -1,7 +1,7 @@
 #include <string>
 #include <wheel_parser/ast/nodes.hxx>
 #include <wheel_parser/ast/symbol.hxx>
-#include <wheel_parser/allocator.hxx>
+#include <wheel_memory/allocator.hxx>
 #include <wheel_lexer/token.hxx>
 #include <__internal/__assert.hxx>
 
@@ -15,7 +15,7 @@ using wheel_parser::ast::NodeKind;
 using wheel_parser::ast::LiteralExpression;
 using wheel_parser::ast::SymbolID;
 using wheel_lexer::TokenKind;
-using wheel_parser::Arena;
+using wheel_memory::Arena;
 
 TEST(test_ast_function_declaration_creation)
     Arena arena;
