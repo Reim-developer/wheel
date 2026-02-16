@@ -5,10 +5,10 @@
 #include <vector>
 #include <unordered_set>
 
-#include <wheel_parser/allocator.hxx>
+#include <wheel_memory/allocator.hxx>
 #include <__internal/__assert.hxx>
 
-using wheel_parser::Arena;
+using wheel_memory::Arena;
 using std::string_view;
 using std::string;
 using std::uint64_t;
