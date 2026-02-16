@@ -17,12 +17,17 @@ using wheel_parser::ast::VariableDeclaration;
 
 Node::Node(NodeKind node_kind, 
         const Token* token) noexcept : node_kind(node_kind), token(token) {
-        not_null<const Token*>(token);
+        
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
 }
 
 StatementNode::StatementNode(NodeKind node_kind,
                              const Token *token) noexcept : Node(node_kind, token) {
-        not_null<const Token*>(token);
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
 }
 
 FunctionDeclaration::FunctionDeclaration(const Token *token, 
@@ -30,23 +35,43 @@ FunctionDeclaration::FunctionDeclaration(const Token *token,
                                         std::vector<SymbolID> func_params,
                                         StatementNode *func_body) noexcept : 
             StatementNode(NodeKind::FunctionDeclaration, token), 
-            func_name(func_name), func_params(std::move(func_params)), func_body(func_body) {}
+            func_name(func_name), func_params(std::move(func_params)), func_body(func_body) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
+}
 
 BlockStatement::BlockStatement(const Token *token, 
                         std::vector<StatementNode*> statements) noexcept : 
                         StatementNode(NodeKind::BlockStatement, token), 
-                        statements(std::move(statements)) {}
+                        statements(std::move(statements)) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
+}
 
 ExpressionNode::ExpressionNode(NodeKind node_kind, 
-                        const Token *token) noexcept : Node(node_kind, token) {}
+                        const Token *token) noexcept : Node(node_kind, token) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
+}
 
 LiteralExpression::LiteralExpression(const Token *token) noexcept : 
-                        ExpressionNode(NodeKind::LiteralExpression, token) {}
+                        ExpressionNode(NodeKind::LiteralExpression, token) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
+}
 
 IdentifierExpression::IdentifierExpression(const Token *token,
                                         SymbolID identifier_id) noexcept :
                         ExpressionNode(NodeKind::IdentifierExpression, token),
-                        identifier_id(identifier_id) {}
+                        identifier_id(identifier_id) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
+}
 
 
 VariableDeclaration::VariableDeclaration(const Token *token,
@@ -54,4 +79,8 @@ VariableDeclaration::VariableDeclaration(const Token *token,
                                         ExpressionNode *initializer) noexcept :
                         StatementNode(NodeKind::VariableDeclaration, token),
                         var_type(var_type), var_name(var_name),
-                        initializer(initializer) {}
+                        initializer(initializer) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
+}
