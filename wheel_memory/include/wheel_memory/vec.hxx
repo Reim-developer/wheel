@@ -1,5 +1,3 @@
-#include <cstddef>
-#include <type_traits>
 #if !defined (VEC_HXX)
 #define VEC_HXX
 
@@ -9,6 +7,7 @@
 #include "config.hxx"
 #include "allocator.hxx"
 #include <cstddef>
+#include <type_traits>
 
 WHEEL_MEMORY_NAMESPACE
     using wheel_memory::Arena;
