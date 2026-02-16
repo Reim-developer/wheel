@@ -25,11 +25,16 @@ if(WHEEL_NO_FAIL_FAST)
 endif()
 
 if(WHEEL_TEST_BY_CONTEXT)
-    add_compile_definitions(WHEEL_TEST_BY_CONTEXT)
+    add_compile_definitions(WHEEL_TEST_BY_CONTEXT=ON)
+endif()
+
+if(WHEEL_SMALL_VEC)
+    add_compile_definitions(WHEEL_SMALL_VEC=ON)
 endif()
 
 add_subdirectory(wheel_utils)
 add_subdirectory(analyzer)
+add_subdirectory(wheel_memory)
 add_subdirectory(wheel_lexer)
 add_subdirectory(wheel_parser)
 
