@@ -41,6 +41,12 @@ WHEEL_MEMORY_NAMESPACE
         public:
             static constexpr size_t STACK_CAPACITY = 4096 / sizeof(T);
 
+            explicit SmallVec(Arena *arena) noexcept :
+                m_arena(arena),
+                m_data(reinterpret_cast<T*>(m_stack_buffer)),
+                m_size(0),
+                m_capacity(STACK_CAPACITY) {}
+
             explicit SmallVec(SmallVec&& other) noexcept :
                 m_arena(std::exchange(other.m_arena, nullptr)),
                 m_data(nullptr),
@@ -138,6 +144,14 @@ WHEEL_MEMORY_NAMESPACE
                 }
 
                 m_size = 0;
+            }
+
+            inline constexpr std::size_t capacity() const noexcept {
+                return m_capacity;
+            }
+
+            inline constexpr bool on_stack() noexcept {
+                return m_data == reinterpret_cast<T*>(m_stack_buffer);
             }
     };
 
