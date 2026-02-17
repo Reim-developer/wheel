@@ -29,8 +29,7 @@ USE_WHEEL_SMALL_VEC
 
         vec.clear();
         assert_eq(vec.size(), 0);
-    DONE 
-
+    DONE
 
     TEST(test_stack_to_heap_transition)
         Arena arena;
@@ -47,6 +46,7 @@ USE_WHEEL_SMALL_VEC
         for (std::size_t index = 0; index < SmallVec<int>::STACK_CAPACITY; ++index) {
             assert_eq(vec.data()[index], static_cast<int>(index));
         }
+
         assert_eq(vec.data()[SmallVec<int>::STACK_CAPACITY], 42);
         vec.clear();
 
@@ -57,9 +57,7 @@ USE_WHEEL_SMALL_VEC
     NO_TEST(test_stack_to_heap_transition)
 #endif 
 
-TEST_MAIN 
-    #if defined (WHEEL_EXPERIMENT) && defined (WHEEL_SMALL_VEC)
-        RUN(test_basic_operations)
-        RUN(test_stack_to_heap_transition)
-    #endif 
+TEST_MAIN
+    RUN(test_basic_operations)
+    RUN(test_stack_to_heap_transition)
 END_MAIN
