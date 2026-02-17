@@ -5,6 +5,15 @@
 #define WHEEL_MEMORY_END_NAMESPACE }
 #define WHEEL_MEMORY_NAMESPACE_NAME wheel_memory
 
+#if defined (WHEEL_EXPERIMENT) && defined(WHEEL_SMALL_VEC)
+    #define HAS_USE_SMALL_VEC 1
+
+#elif !defined(WHEEL_EXPERIMENT) && defined(WHEEL_SMALL_VEC)
+    #error "Cannot use WHEEL_SMALL_VEC without WHEEL_EXPERIMENT"
+#else 
+    #define HAS_USEHAS_USE_SMALL_VEC 0
+#endif 
+
 #if defined(_MSC_VER)
     #define WHEEL_NO_INLINE __declspec(noinline)
 
