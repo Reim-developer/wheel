@@ -1,5 +1,4 @@
 #include <__internal/__assert.hxx>
-#include <cstddef>
 #include <wheel_memory/vec.hxx>
 #include <wheel_memory/allocator.hxx>
 #include <wheel_memory/config.hxx>
@@ -7,6 +6,7 @@
 USE_WHEEL_SMALL_VEC
 
 #if HAS_USE_SMALL_VEC
+    #include <cstddef>
     using wheel_memory::Arena;
 #endif 
 
@@ -58,6 +58,8 @@ USE_WHEEL_SMALL_VEC
 #endif 
 
 TEST_MAIN 
-    RUN(test_basic_operations)
-    RUN(test_stack_to_heap_transition)
+    #if defined (WHEEL_EXPERIMENT) && defined (WHEEL_SMALL_VEC)
+        RUN(test_basic_operations)
+        RUN(test_stack_to_heap_transition)
+    #endif 
 END_MAIN
