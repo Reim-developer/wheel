@@ -1,0 +1,1 @@
+setup_wheel_test(memory_small_vec_test memory_small_vec_test.cxx)
