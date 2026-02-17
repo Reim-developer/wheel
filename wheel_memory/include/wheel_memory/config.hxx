@@ -11,7 +11,7 @@
 #elif !defined(WHEEL_EXPERIMENT) && defined(WHEEL_SMALL_VEC)
     #error "Cannot use WHEEL_SMALL_VEC without WHEEL_EXPERIMENT"
 #else 
-    #define HAS_USEHAS_USE_SMALL_VEC 0
+    #define HAS_USE_SMALL_VEC 0
 #endif 
 
 #if defined(_MSC_VER)
@@ -31,7 +31,7 @@
     #endif 
     
 #else 
-    #define USE_WHEEL_SMALL_VEC static_assert(true, "WHEEL_EXPERIMENT && WHEEL_SMALL_VEC has been disabled.")
+    #define USE_WHEEL_SMALL_VEC static_assert(true, "WHEEL_EXPERIMENT && WHEEL_SMALL_VEC has been disabled.");
 #endif 
 
 #endif // WHEEL_MEMORY_CONFIG_HXX
