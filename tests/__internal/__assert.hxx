@@ -46,14 +46,37 @@ using wheel_lexer::TokenKind;
         << content << "\n"; \
     } while(0)
 
+
+template<typename X, typename Y>
+void print_assert_v(const X& x, const Y& y, const char *label_x, const char* label_y) {
+    const char* is_eq = (x == y) ? "==" : "!=";
+
+    if constexpr (requires { std::cout << x; std::cout << y; }) {
+
+        std::cout   << "[" 
+                    << label_x << " = " << x
+                    << "] " << is_eq
+                    << " ["
+                    << label_y << " = " << y
+                    << "]\n";
+
+        return;
+    }
+   std::cout << "[" 
+             << label_x << " = " << static_cast<const void*>(&x)
+             << "] " << is_eq
+             << " ["
+             << label_y << " = " << static_cast<const void*>(&y) 
+             << "]\n";
+}
+
 #define assert_eq(x, y) \
     do { \
         if ((x != y)) { \
-            cerr << "\n"; \
-            cerr << std::format("{} is not equal of: {}", #x, #y); \
+            print_assert_v(x, y, #x, #y); \
             abort(); \
         } else { \
-            cout << std::format("{} is equal of: {}\n", #x, #y); \
+           print_assert_v(x, y, #x, #y); \
         }\
     } while(0);
 
