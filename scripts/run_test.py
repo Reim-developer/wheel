@@ -23,6 +23,7 @@ class __CMakeBuildTarget(StrEnum):
 	PARSER_SYMBOL_INTERNER_TEST = "parser_symbol_interner_test"
 	PARSER_AST_TEST 			= "parser_ast_test"
 	UTILS_NOT_NULL_TEST			= "utils_not_null_test"
+	MEMORY_SMALL_VEC_TEST 		= "memory_small_vec_test"
 
 class __TargetConfig(StrEnum):
 	DEBUG = "Debug"
