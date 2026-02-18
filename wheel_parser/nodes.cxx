@@ -14,6 +14,7 @@ using wheel_parser::ast::ExpressionNode;
 using wheel_parser::ast::LiteralExpression;
 using wheel_parser::ast::IdentifierExpression;
 using wheel_parser::ast::VariableDeclaration;
+using wheel_parser::ast::ErrorStatement;
 
 Node::Node(NodeKind node_kind, 
         const Token* token) noexcept : node_kind(node_kind), token(token) {
@@ -80,6 +81,13 @@ VariableDeclaration::VariableDeclaration(const Token *token,
                         StatementNode(NodeKind::VariableDeclaration, token),
                         var_type(var_type), var_name(var_name),
                         initializer(initializer) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif 
+}
+
+ErrorStatement::ErrorStatement(const Token *token) noexcept :
+        StatementNode(NodeKind::ErrorStatement, token) {
         #if defined (WHEEL_ASSERTION)
                 not_null<const Token*>(token);
         #endif 
