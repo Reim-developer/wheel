@@ -86,3 +86,6 @@ def gen_or_read_options(cfg_path: str | Path) -> Options:
 		refresh_cache 		= extra_dict.get("refresh-cache", False),
 		compiler_commands	= extra_dict.get("compiler-commands", False)
 	), flags = raw_dict.get("flags", None))
+
+def unused(*var: object) -> None:
+	_ = var 
