@@ -2,7 +2,7 @@
 
 from lib 		import (
 	cerr, cout, StatusCode, die, working_dir, change_dir_to,
-	gen_or_read_options
+	gen_or_read_options, unused
 )
 from pathlib 	import Path
 from typing 	import Callable
@@ -29,6 +29,7 @@ def format_table(headers: list[str], rows: list[list[str]]) -> str:
 	return "\n".join(table_lines)
 
 def send_help(extra: str) -> None:
+	unused(extra)
 	cout("List of available commands:")
 	
 	headers 			 				= ["name", "aliases", "description"]
@@ -54,6 +55,8 @@ def send_help(extra: str) -> None:
 	cout(format_table(headers, rows))
 
 def copy_compiler_commands(extra: str) -> None:
+	unused(extra)
+
 	compiler_commands_file 	= Path("../compile_commands.json") if working_dir() == "scripts" else Path("compile_commands.json")
 	build_dir 				= Path("../build") if working_dir() == "scripts" else Path("build")
 	root_dir 				= Path("..") if working_dir() == "scripts" else Path(".")
@@ -71,10 +74,12 @@ def copy_compiler_commands(extra: str) -> None:
 		cerr(f"Cannot copy {compiler_commands_path.absolute()} to {compiler_commands_file.absolute()} , error: {error}")
 
 def find_config(extra: str) -> None:
+	unused(extra)
+
 	if working_dir() == "scripts":
 		change_dir_to("..")
 
-	config_path = Path("cfg_2.json")
+	config_path = Path("cfg.json")
 	if not config_path.exists():
 		cerr(f"configuration file {config_path} not found, generate now? Y/N")
 
@@ -106,12 +111,14 @@ def find_config(extra: str) -> None:
 	cout(f"Found configuration path as {config_path.absolute()}")
 
 def clear_console(extra: str) -> None:
+	unused(extra)
 	print("\033[2J\033[H", end = "")
 	stdout.flush()
 
 def exit(extra: str) -> None:
+	unused(extra)
 	die(StatusCode.SUCCESS)
-
+	
 class CommandInfo:
 	def __init__(self, name: str, aliases: list[str], 
 			  	description: str, handler: Callable[[str], None]) -> None:
@@ -143,7 +150,7 @@ register_command(CommandInfo(
 ))
 register_command(CommandInfo(
 	name 		= "config",
-	aliases		= ["config", "cfg"],
+	aliases		= ["config", "cfg", "cf"],
 	description	= "find or generate the configuration",
 	handler		= find_config
 ))
@@ -155,12 +162,14 @@ register_command(CommandInfo(
 ))
 register_command(CommandInfo(
 	name 		= "copy",
-	aliases		= ["copy-compiler-commands", "ccc", "cpc"],
+	aliases		= ["copy-compiler-commands", "ccc", "cpc", "c3"],
 	description = "copy compiler_commands.json to root directory",
 	handler		= copy_compiler_commands
 ))
 
 def main_loop() -> None:
+	clear_console("")
+	cout("welcome to interactive mode. Type '?' to show all commands.")
 	while True:
 		command = input(">>> ")
 		if len(command.strip()) == 0:
