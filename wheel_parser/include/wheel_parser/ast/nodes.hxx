@@ -15,7 +15,8 @@ WHEEL_PARSER_AST_NAMESPACE
         BlockStatement,
         LiteralExpression,
         IdentifierExpression,
-        VariableDeclaration
+        VariableDeclaration,
+        ErrorStatement
     };
 
     struct Node {
@@ -74,6 +75,10 @@ WHEEL_PARSER_AST_NAMESPACE
         explicit VariableDeclaration(const Token *token,
                                     SymbolID var_type, SymbolID var_name,
                                     ExpressionNode *initializer) noexcept;
+    };
+
+    struct ErrorStatement final : StatementNode {
+        explicit ErrorStatement(const Token *token) noexcept;
     };
 
 WHEEL_PARSER_END_NAMESPACE
