@@ -58,8 +58,7 @@ void print_assert_v(const X& x, const Y& y, const char *label_x, const char* lab
                     << "] " << is_eq
                     << " ["
                     << label_y << " = " << y
-                    << "]\n";
-
+                    << "]" << std::endl;;
         return;
     }
    std::cout << "[" 
@@ -67,7 +66,7 @@ void print_assert_v(const X& x, const Y& y, const char *label_x, const char* lab
              << "] " << is_eq
              << " ["
              << label_y << " = " << static_cast<const void*>(&y) 
-             << "]\n";
+             << "]\n" << std::endl;
 }
 
 #define assert_eq(x, y) \
