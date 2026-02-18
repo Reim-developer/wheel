@@ -110,7 +110,7 @@ WHEEL_MEMORY_NAMESPACE
             }
 
             SmallVec(const SmallVec&)            = delete;
-            SmallVec& operator=(const SmallVec)& = delete;
+            SmallVec& operator=(const SmallVec&)& = delete;
 
             inline constexpr size_t size() const noexcept {
                 return m_size;
@@ -129,7 +129,7 @@ WHEEL_MEMORY_NAMESPACE
                 ++m_size;
             }
 
-            inline void push_back(T&& value) {
+            inline constexpr void push_back(T&& value) {
                 if (m_size >= m_capacity) {
                     grow();
                 }
@@ -138,7 +138,7 @@ WHEEL_MEMORY_NAMESPACE
                 ++m_size;
             }
 
-            inline void clear() noexcept {
+            inline constexpr void clear() noexcept {
                 if constexpr (!std::is_trivially_destructible_v<T>) {
                     std::destroy_n(m_data, m_size);
                 }
