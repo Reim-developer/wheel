@@ -5,8 +5,10 @@ target_sources(
     INTERFACE
     FILE_SET HEADERS
     BASE_DIRS include
+    
     FILES
         include/wheel_memory/vec.hxx
+        include/wheel_memory/allocator.hxx
 )
 
 target_include_directories(
