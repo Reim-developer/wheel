@@ -24,6 +24,7 @@ WHEEL_LEXER_NAMESPACE
         */
         DOCUMENT_COMMENT,
 
+        /* Identifier */
         IDENT,
         
         /* `10` */
