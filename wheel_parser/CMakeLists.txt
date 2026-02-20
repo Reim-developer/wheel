@@ -21,4 +21,4 @@ target_include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )   
 
-target_link_libraries(wheel_parser PUBLIC wheel_utils wheel_lexer)
+target_link_libraries(wheel_parser PUBLIC wheel_memory wheel_utils wheel_lexer)
