@@ -50,4 +50,4 @@ target_include_directories(
     ${CMAKE_SOURCE_DIR}/src
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE wheel_lexer wheel_utils analyzer wheel_parser)
+target_link_libraries(${PROJECT_NAME} PRIVATE wheel_lexer wheel_utils wheel_parser)
