@@ -103,7 +103,7 @@ WHEEL_LEXER_NAMESPACE
             case TokenKind::RIGHT_PARENT:       return  "RIGHT_PARENT";
         }
 
-        return "ERROR";
+        return "IDENTIFIER";
     }
 
 END_NAMESPACE
