@@ -65,6 +65,10 @@ WHEEL_LEXER_NAMESPACE
         WHEEL_ALWAYS_INLINE_NODISCARD SourceLocation get_source_location(const Token &token) noexcept {
             return source_map.source_location(token.start);
         }
+
+        WHEEL_ALWAYS_INLINE_NODISCARD StringView get_source_line(size_t offset) const noexcept {
+            return source_map.source_line(cursor.source_view, offset);
+        }
     };
 
 END_NAMESPACE
