@@ -33,7 +33,6 @@ if(WHEEL_SMALL_VEC)
 endif()
 
 add_subdirectory(wheel_utils)
-add_subdirectory(analyzer)
 add_subdirectory(wheel_memory)
 add_subdirectory(wheel_lexer)
 add_subdirectory(wheel_parser)
@@ -51,4 +50,4 @@ target_include_directories(
     ${CMAKE_SOURCE_DIR}/src
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE wheel_lexer wheel_utils analyzer wheel_parser)
+target_link_libraries(${PROJECT_NAME} PRIVATE wheel_lexer wheel_utils wheel_parser)

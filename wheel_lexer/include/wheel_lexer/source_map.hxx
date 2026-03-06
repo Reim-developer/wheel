@@ -56,6 +56,41 @@ WHEEL_LEXER_NAMESPACE
                     .offset = safe_offset
                 };
             }
+
+            WHEEL_ALWAYS_INLINE_NODISCARD StringView source_line(StringView source, size_t offset) const noexcept {
+                if (line_starts.empty() || source.empty()) {
+                    return {};
+                }
+
+                const auto capped_offset = std::min(offset, source.size());
+                const uint32_t safe_offset = (capped_offset > UINT32_MAX)
+                    ? UINT32_MAX
+                    : static_cast<uint32_t>(capped_offset);
+
+                auto it = std::upper_bound(line_starts.begin(), line_starts.end(), safe_offset);
+                if (it != line_starts.begin()) {
+                    --it;
+                }
+
+                const size_t line_index = static_cast<size_t>(std::distance(line_starts.begin(), it));
+                const size_t start = line_starts[line_index];
+
+                size_t end = source.size();
+                if (line_index + 1 < line_starts.size()) {
+                    end = line_starts[line_index + 1];
+                }
+
+                while (end > start) {
+                    const char trailing = source[end - 1];
+                    if (trailing != '\n' && trailing != '\r') {
+                        break;
+                    }
+
+                    --end;
+                }
+
+                return source.substr(start, end - start);
+            }
     };
 
 END_NAMESPACE

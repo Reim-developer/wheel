@@ -31,7 +31,6 @@ function (setup_wheel_test test_name test_source)
 endfunction()
 
 add_subdirectory(lexer_tests)
-add_subdirectory(analyzer_tests)
 add_subdirectory(parser_tests)
 add_subdirectory(utils_tests)
 add_subdirectory(memory_tests)

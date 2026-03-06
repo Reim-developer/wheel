@@ -99,6 +99,12 @@ WHEEL_LEXER_NAMESPACE
         return make_token(Kind::EQUAL, "=", start, cursor.position());
     }
 
+    _WHEEL_HANDLERS(if_colon) {
+        cursor.bump();
+
+        return make_token(Kind::COLON, ":", start, cursor.position());
+    }
+
     _WHEEL_HANDLERS(if_ident) {
         while(is_ident_continue(cursor.first())) {
             cursor.bump();
@@ -238,6 +244,7 @@ WHEEL_LEXER_NAMESPACE
 
         /* Operator(s) */
         table['=']  = if_equal;
+        table[':']  = if_colon;
         table['+']  = if_plus;
         table['-']  = if_minus;
         table['*']  = if_star;
