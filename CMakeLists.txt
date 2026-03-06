@@ -33,7 +33,6 @@ if(WHEEL_SMALL_VEC)
 endif()
 
 add_subdirectory(wheel_utils)
-add_subdirectory(analyzer)
 add_subdirectory(wheel_memory)
 add_subdirectory(wheel_lexer)
 add_subdirectory(wheel_parser)
