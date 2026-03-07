@@ -10,20 +10,28 @@ from lib 		import die, StatusCode, cout, cerr
 from typing 	import Optional
 
 class __CMakeBuildTarget(StrEnum):
-	LEXER_EOF_TEST 	 					= "lexer_eof_test"
-	LEXER_NEWLINE_TEST  				= "lexer_newline_test"
-	LEXER_TAB_TEST						= "lexer_tab_test"
-	LEXER_COMMENT_TEST  				= "lexer_comment_test"
-	LEXER_SPACE_TEST 					= "lexer_space_test"
-	LEXER_CURSOR_TEST   				= "lexer_cursor_test"
-	LEXER_OPERATOR_TEST 				= "lexer_operator_test"
-	LEXER_LITERAL_TEST 					= "lexer_literal_test"
-	PARSER_ARENA_TEST 					= "parser_arena_test"
-	PARSER_SYMBOL_INTERNER_TEST 		= "parser_symbol_interner_test"
-	PARSER_VARIABLE_DECLARATION_TEST 	= "parser_variable_declaration_test"
-	PARSER_AST_TEST 					= "parser_ast_test"
-	UTILS_NOT_NULL_TEST					= "utils_not_null_test"
-	MEMORY_SMALL_VEC_TEST 				= "memory_small_vec_test"
+	LEXER_EOF_TEST 	 						= "lexer_eof_test"
+	LEXER_NEWLINE_TEST  					= "lexer_newline_test"
+	LEXER_TAB_TEST							= "lexer_tab_test"
+	LEXER_COMMENT_TEST  					= "lexer_comment_test"
+	LEXER_SPACE_TEST 						= "lexer_space_test"
+	LEXER_CURSOR_TEST   					= "lexer_cursor_test"
+	LEXER_OPERATOR_TEST 					= "lexer_operator_test"
+	LEXER_LITERAL_TEST 						= "lexer_literal_test"
+	LEXER_PUNCTUATION_TEST					= "lexer_punctuation_test"
+
+	PARSER_ARENA_TEST 						= "parser_arena_test"
+	PARSER_SYMBOL_INTERNER_TEST 			= "parser_symbol_interner_test"
+	PARSER_VARIABLE_DECLARATION_TEST 		= "parser_variable_declaration_test"
+	PARSER_AST_TEST 						= "parser_ast_test"
+	PARSER_CALL_STATEMENT					= "parser_call_statement_test"
+
+	UTILS_NOT_NULL_TEST						= "utils_not_null_test"
+	MEMORY_SMALL_VEC_TEST 					= "memory_small_vec_test"
+
+	SEMANTIC_VARIABLE_DECLARATION_TEST		= "semantic_variable_declaration_test"
+	SEMANTIC_PRINTLN_TEST					= "semantic_println_test"
+	INTERPRETER_VARIABLE_DECLARATION_TEST 	= "interpreter_variable_declaration_test"
 
 class __TargetConfig(StrEnum):
 	DEBUG = "Debug"
