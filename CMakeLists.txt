@@ -36,18 +36,11 @@ add_subdirectory(wheel_utils)
 add_subdirectory(wheel_memory)
 add_subdirectory(wheel_lexer)
 add_subdirectory(wheel_parser)
+add_subdirectory(wheel_senematic)
+add_subdirectory(wheel_interpreter)
+add_subdirectory(wheel_cli)
 
-add_executable(
-    ${PROJECT_NAME}
-    src/main.cxx
-)
-
-enable_testing()
-add_subdirectory(tests)
-
-target_include_directories(
-    ${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/src
-)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE wheel_lexer wheel_utils wheel_parser)
+include(CTest)
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
