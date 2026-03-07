@@ -4,24 +4,23 @@
 #include <initializer_list>
 #include <iostream>
 #include <sstream>
-#include <utility>
 
 #include <wheel_interpreter/interpreter.hxx>
 #include <wheel_memory/allocator.hxx>
-#include <wheel_senematic/program.hxx>
+#include <wheel_semantic/program.hxx>
 
 using wheel_interpreter::RuntimeErrorCode;
 using wheel_interpreter::RuntimeValueKind;
 using wheel_interpreter::WheelInterpreter;
 using wheel_memory::Arena;
 using wheel_parser::ast::SymbolID;
-using wheel_senematic::DefineGlobalStatement;
-using wheel_senematic::ExecutableStatement;
-using wheel_senematic::Operand;
-using wheel_senematic::OperandList;
-using wheel_senematic::PrintlnStatement;
-using wheel_senematic::ProgramView;
-using wheel_senematic::Value;
+using wheel_semantic::DefineGlobalStatement;
+using wheel_semantic::ExecutableStatement;
+using wheel_semantic::Operand;
+using wheel_semantic::OperandList;
+using wheel_semantic::PrintlnStatement;
+using wheel_semantic::ProgramView;
+using wheel_semantic::Value;
 
 namespace {
     [[nodiscard]] OperandList make_operand_list(
