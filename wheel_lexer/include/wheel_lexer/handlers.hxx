@@ -105,6 +105,30 @@ WHEEL_LEXER_NAMESPACE
         return make_token(Kind::COLON, ":", start, cursor.position());
     }
 
+    _WHEEL_HANDLERS(if_comma) {
+        cursor.bump();
+
+        return make_token(Kind::COMMA, ",", start, cursor.position());
+    }
+
+    _WHEEL_HANDLERS(if_dot) {
+        cursor.bump();
+
+        return make_token(Kind::DOT, ".", start, cursor.position());
+    }
+
+    _WHEEL_HANDLERS(if_left_parent) {
+        cursor.bump();
+
+        return make_token(Kind::LEFT_PARENT, "(", start, cursor.position());
+    }
+
+    _WHEEL_HANDLERS(if_right_parent) {
+        cursor.bump();
+
+        return make_token(Kind::RIGHT_PARENT, ")", start, cursor.position());
+    }
+
     _WHEEL_HANDLERS(if_ident) {
         while(is_ident_continue(cursor.first())) {
             cursor.bump();
@@ -245,6 +269,10 @@ WHEEL_LEXER_NAMESPACE
         /* Operator(s) */
         table['=']  = if_equal;
         table[':']  = if_colon;
+        table[',']  = if_comma;
+        table['.']  = if_dot;
+        table['(']  = if_left_parent;
+        table[')']  = if_right_parent;
         table['+']  = if_plus;
         table['-']  = if_minus;
         table['*']  = if_star;
