@@ -3,7 +3,6 @@
 
 #include "token.hxx"
 #include "cursor.hxx"
-#include "utils.hxx"
 #include "handlers.hxx"
 #include "aliases.hxx"
 #include "properties.hxx"
