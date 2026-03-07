@@ -40,7 +40,7 @@ namespace {
 
         return list;
     }
-} // namespace
+}
 
 TEST(test_interpreter_executes_define_global_statement)
     Arena arena;
