@@ -7,10 +7,8 @@
 #include <optional>
 #include <charconv>
 #include <system_error>
+#include <wheel_utils/logging.hxx>
 
-#if defined (WHEEL_DEBUG)
-    #include <wheel_utils/logging.hxx>
-#endif
 
 using wheel_semantic::SemanticErrorCode;
 WHEEL_SEMANTIC_BEGIN_NAMESPACE
