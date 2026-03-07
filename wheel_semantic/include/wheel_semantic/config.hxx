@@ -1,0 +1,7 @@
+#if !defined(SEMANTIC_CONFIG_HXX)
+#define SEMANTIC_CONFIG_HXX 
+
+#define WHEEL_SEMANTIC_BEGIN_NAMESPACE namespace wheel_semantic {
+#define WHEEL_SEMANTIC_END_NAMESPACE }
+
+#endif // SEMANTIC_CONFIG_HXX
