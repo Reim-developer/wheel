@@ -59,6 +59,22 @@ USE_WHEEL_SMALL_VEC
         }
     };
 
+    [[nodiscard]] SmallVec<int> make_small_vec(Arena &arena, bool first_branch) {
+        SmallVec<int> first(&arena);
+        first.push_back(1);
+        first.push_back(2);
+
+        SmallVec<int> second(&arena);
+        second.push_back(3);
+        second.push_back(4);
+
+        if (first_branch) {
+            return first;
+        }
+
+        return second;
+    }
+
     int TestObject::alive_count = 0;
     int TestObject::move_count  = 0;
     int TestObject::copy_count  = 0;
@@ -206,9 +222,23 @@ USE_WHEEL_SMALL_VEC
 
         vec.push_back(SmallVec<int>(&arena));
         vec.data()[0].push_back(1);
-    
+
         assert_eq(vec.data()[0].data()[0], 1);
     DONE 
+
+    TEST(test_return_by_value)
+        Arena arena;
+
+        SmallVec<int> first = make_small_vec(arena, true);
+        assert_eq(first.size(), 2);
+        assert_eq(first.data()[0], 1);
+        assert_eq(first.data()[1], 2);
+
+        SmallVec<int> second = make_small_vec(arena, false);
+        assert_eq(second.size(), 2);
+        assert_eq(second.data()[0], 3);
+        assert_eq(second.data()[1], 4);
+    DONE
 #else 
     NO_TEST(test_basic_operations)
     NO_TEST(test_stack_to_heap_transition)
@@ -216,6 +246,7 @@ USE_WHEEL_SMALL_VEC
     NO_TEST(test_move_constructor)
     NO_TEST(test_self_assigment)
     NO_TEST(test_vec_of_vecs)
+    NO_TEST(test_return_by_value)
 #endif 
 
 TEST_MAIN
@@ -225,4 +256,5 @@ TEST_MAIN
     RUN(test_move_constructor)
     RUN(test_self_assigment)
     RUN(test_vec_of_vecs)
+    RUN(test_return_by_value)
 END_MAIN

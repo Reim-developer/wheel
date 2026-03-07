@@ -10,6 +10,8 @@
 WHEEL_PARSER_AST_NAMESPACE
     enum class Keyword : uint8_t {
         Var,
+        Int,
+        String,
         Count
     };
 
@@ -18,7 +20,9 @@ WHEEL_PARSER_AST_NAMESPACE
     };
 
     inline constexpr std::array<KeywordSpec, static_cast<size_t>(Keyword::Count)> k_keywords = {{
-        {"var"}
+        {"var"},
+        {"int"},
+        {"string"}
     }};
 
 

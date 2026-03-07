@@ -13,8 +13,10 @@ WHEEL_PARSER_AST_NAMESPACE
     enum class NodeKind : uint8_t {
         FunctionDeclaration,
         BlockStatement,
+        ExpressionStatement,
         LiteralExpression,
         IdentifierExpression,
+        CallExpression,
         VariableDeclaration,
         ErrorStatement
     };
@@ -34,6 +36,8 @@ WHEEL_PARSER_AST_NAMESPACE
                                 const Token *token) noexcept;
     };
 
+    struct ExpressionNode;
+
     struct FunctionDeclaration final : StatementNode {
         SymbolID func_name;
         std::vector<SymbolID> func_params;
@@ -52,6 +56,12 @@ WHEEL_PARSER_AST_NAMESPACE
                                 std::vector<StatementNode*> statements) noexcept;
     };
 
+    struct ExpressionStatement final : StatementNode {
+        ExpressionNode *expression;
+
+        explicit ExpressionStatement(const Token *token, ExpressionNode *expression) noexcept;
+    };
+
     struct ExpressionNode : Node {
         protected:
             explicit ExpressionNode(NodeKind node_kind, const Token *token) noexcept;
@@ -65,6 +75,17 @@ WHEEL_PARSER_AST_NAMESPACE
         SymbolID identifier_id;
 
         explicit IdentifierExpression(const Token *token, SymbolID identifier_id) noexcept;
+    };
+
+    struct CallExpression final : ExpressionNode {
+        SymbolID callee;
+        std::vector<ExpressionNode *> arguments;
+
+        explicit CallExpression(
+            const Token *token,
+            SymbolID callee,
+            std::vector<ExpressionNode *> arguments
+        ) noexcept;
     };
 
     struct VariableDeclaration final : StatementNode {

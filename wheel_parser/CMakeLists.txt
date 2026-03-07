@@ -10,9 +10,14 @@ target_sources(wheel_parser
         BASE_DIRS   include
         FILES
             include/wheel_parser/config.hxx
+            include/wheel_parser/error.hxx
             include/wheel_parser/parser.hxx
+            include/wheel_parser/parser_utils.hxx
+            include/wheel_parser/functions/variables_declaration.hxx
             include/wheel_parser/ast/symbol.hxx
+            include/wheel_parser/ast/builtins.hxx
             include/wheel_parser/ast/nodes.hxx
+            include/wheel_parser/ast/keywords.hxx
 )
 
 target_include_directories(

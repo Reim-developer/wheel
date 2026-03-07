@@ -65,9 +65,11 @@ WHEEL_LEXER_NAMESPACE
         COLON,
         /* `,` */
         COMMA,
-        /* `)` */ 
+        /* `.` */
+        DOT,
+        /* `(` */ 
         LEFT_PARENT,
-        /* `(` */
+        /* `)` */
         RIGHT_PARENT
     };
 
@@ -99,7 +101,8 @@ WHEEL_LEXER_NAMESPACE
             case TokenKind::GREATER_THAN:       return "GREATER_THAN";
             case TokenKind::COLON:              return "COLON";
             case TokenKind::COMMA:              return "COMMA";
-            case TokenKind::LEFT_PARENT:         return "LEFT_PARENT";
+            case TokenKind::DOT:                return "DOT";
+            case TokenKind::LEFT_PARENT:        return "LEFT_PARENT";
             case TokenKind::RIGHT_PARENT:       return  "RIGHT_PARENT";
         }
 

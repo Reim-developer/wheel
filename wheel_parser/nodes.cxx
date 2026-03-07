@@ -13,6 +13,8 @@ using wheel_parser::ast::NodeKind;
 using wheel_parser::ast::ExpressionNode;
 using wheel_parser::ast::LiteralExpression;
 using wheel_parser::ast::IdentifierExpression;
+using wheel_parser::ast::CallExpression;
+using wheel_parser::ast::ExpressionStatement;
 using wheel_parser::ast::VariableDeclaration;
 using wheel_parser::ast::ErrorStatement;
 
@@ -51,6 +53,17 @@ BlockStatement::BlockStatement(const Token *token,
         #endif 
 }
 
+ExpressionStatement::ExpressionStatement(
+    const Token *token,
+    ExpressionNode *expression
+) noexcept :
+        StatementNode(NodeKind::ExpressionStatement, token),
+        expression(expression) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif
+}
+
 ExpressionNode::ExpressionNode(NodeKind node_kind, 
                         const Token *token) noexcept : Node(node_kind, token) {
         #if defined (WHEEL_ASSERTION)
@@ -72,6 +85,19 @@ IdentifierExpression::IdentifierExpression(const Token *token,
         #if defined (WHEEL_ASSERTION)
                 not_null<const Token*>(token);
         #endif 
+}
+
+CallExpression::CallExpression(
+    const Token *token,
+    SymbolID callee,
+    std::vector<ExpressionNode *> arguments
+) noexcept :
+        ExpressionNode(NodeKind::CallExpression, token),
+        callee(callee),
+        arguments(std::move(arguments)) {
+        #if defined (WHEEL_ASSERTION)
+                not_null<const Token*>(token);
+        #endif
 }
 
 
