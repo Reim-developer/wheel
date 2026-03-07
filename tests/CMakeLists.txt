@@ -15,12 +15,16 @@ function (setup_wheel_test test_name test_source)
             ${CMAKE_SOURCE_DIR}/wheel_utils
             ${CMAKE_SOURCE_DIR}/wheel_parser
             ${CMAKE_SOURCE_DIR}/wheel_memory
+            ${CMAKE_SOURCE_DIR}/wheel_interpreter
+            ${CMAKE_SOURCE_DIR}/wheel_senematic
     )
 
     target_link_libraries(${test_name} PRIVATE wheel_lexer)
     target_link_libraries(${test_name} PRIVATE wheel_utils)
     target_link_libraries(${test_name} PRIVATE wheel_parser)
     target_link_libraries(${test_name} PRIVATE wheel_memory)
+    target_link_libraries(${test_name} PRIVATE wheel_senematic)
+    target_link_libraries(${test_name} PRIVATE wheel_interpreter)
     set_property(TARGET ${test_name} PROPERTY CXX_STANDARD 20)
 
     set_target_properties(
@@ -32,5 +36,7 @@ endfunction()
 
 add_subdirectory(lexer_tests)
 add_subdirectory(parser_tests)
+add_subdirectory(senematic_tests)
+add_subdirectory(interpreter_tests)
 add_subdirectory(utils_tests)
 add_subdirectory(memory_tests)
