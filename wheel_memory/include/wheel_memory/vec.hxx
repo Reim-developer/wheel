@@ -47,7 +47,7 @@ WHEEL_MEMORY_NAMESPACE
                 m_size(0),
                 m_capacity(STACK_CAPACITY) {}
 
-            explicit SmallVec(SmallVec&& other) noexcept :
+            SmallVec(SmallVec&& other) noexcept :
                 m_arena(std::exchange(other.m_arena, nullptr)),
                 m_data(nullptr),
                 m_size(std::exchange(other.m_size, 0)),
