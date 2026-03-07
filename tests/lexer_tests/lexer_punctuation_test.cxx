@@ -4,7 +4,7 @@
 #include <wheel_lexer/lexer.hxx>
 
 using wheel_lexer::Lexer;
-using wheel_lexer::TokenKind;
+
 
 TEST(test_punctuation_tokens)
     Lexer lexer("(,.)");
