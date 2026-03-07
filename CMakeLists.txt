@@ -36,7 +36,7 @@ add_subdirectory(wheel_utils)
 add_subdirectory(wheel_memory)
 add_subdirectory(wheel_lexer)
 add_subdirectory(wheel_parser)
-add_subdirectory(wheel_senematic)
+add_subdirectory(wheel_semantic)
 add_subdirectory(wheel_interpreter)
 add_subdirectory(wheel_cli)
 
