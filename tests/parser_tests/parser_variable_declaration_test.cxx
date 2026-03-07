@@ -53,7 +53,22 @@ TEST(test_variable_declaration_error_node)
     assert_eq(diagnostics.data()[0].full_message.empty(), false);
 DONE
 
+TEST(test_variable_declaration_missing_type_keyword)
+    Arena arena;
+    Lexer lexer("var x: foo = 10");
+    StringInterner interner;
+    WheelParser wheel_parser(lexer, arena, interner);
+
+    const auto node = wheel_parser.parse_variable_declaration();
+    const auto errors = wheel_parser.errors_data();
+
+    assert_eq(node->node_kind, NodeKind::ErrorStatement);
+    assert_eq(wheel_parser.error_count(), 1);
+    assert_eq(static_cast<uint16_t>(errors[0].code), static_cast<uint16_t>(ParseErrorCode::ExpectedTypeKeyword));
+DONE
+
 TEST_MAIN
     RUN(test_normal_variable_declaration)
     RUN(test_variable_declaration_error_node)
+    RUN(test_variable_declaration_missing_type_keyword)
 END_MAIN
