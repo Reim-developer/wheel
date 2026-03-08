@@ -3,6 +3,8 @@
 
 #define WHEEL_PARSER_NAMESPACE      namespace wheel_parser {
 #define WHEEL_PARSER_AST_NAMESPACE  namespace wheel_parser::ast {
+#define WHEEL_PARSER_FUNCTIONS_BEGIN_NAMESPACE namespace wheel_parser::functions {
+#define WHEEL_PARSER_FUNCTIONS_END_NAMESPACE }
 #define WHEEL_PARSER_END_NAMESPACE }
 
 #if defined(_MSC_VER)

@@ -1,27 +1,30 @@
 #include "wheel_parser/parser.hxx"
+#include "include/wheel_parser/functions/contracts_declaration.hxx"
 #include "wheel_parser/ast/builtins.hxx"
-#include "wheel_parser/ast/keywords.hxx"
 #include "wheel_parser/ast/nodes.hxx"
+#include "wheel_parser/error.hxx"
 #include "wheel_parser/parser_utils.hxx"
+#include "wheel_parser/functions/emit_error.hxx"
+#include "wheel_parser/functions/variables_declaration.hxx"
+#include "wheel_parser/functions/contracts_declaration.hxx"
 #include <utility>
 #include <wheel_utils/logging.hxx>
 
 using wheel_memory::Arena;
 using wheel_parser::WheelParser;
 using wheel_parser::ast::StatementNode;
-using wheel_parser::ast::VariableDeclaration;
 using wheel_parser::ast::LiteralExpression;
 using wheel_parser::ast::IdentifierExpression;
 using wheel_parser::ast::CallExpression;
 using wheel_parser::ast::ExpressionNode;
 using wheel_parser::ast::ExpressionStatement;
-using wheel_parser::ast::ErrorStatement;
-using wheel_parser::ast::BuiltinType;
 using wheel_parser::ast::BuiltinFunction;
 using wheel_parser::ast::SymbolID;
 using wheel_parser::ast::lookup_builtin_function;
 using wheel_parser::ast::intern_builtin_registry;
-using wheel_parser::ast::Keyword;
+using wheel_parser::functions::ParserFuncContract;
+using wheel_parser::functions::ParserState;
+using wheel_parser::functions::parse_variable_declaration;
 using wheel_lexer::Lexer;
 
 #if defined(WHEEL_EXPERIMENT) && defined(WHEEL_SMALL_VEC)
@@ -42,44 +45,10 @@ WheelParser::WheelParser(Lexer &lexer, Arena &arena, StringInterner &interner) n
     m_statements() {}
 #endif
 
-void WheelParser::skip_spaces() noexcept {
-    while (true) {
-        consume(m_lexer, m_current_token);
-        if (m_current_token.kind != TokenKind::SPACE && m_current_token.kind != TokenKind::TAB) {
-            break;
-        }
-    }
-}
-
 void WheelParser::synchronize_statement() noexcept {
     while (m_current_token.kind != TokenKind::EOF_ && m_current_token.kind != TokenKind::NEWLINE) {
         consume(m_lexer, m_current_token);
     }
-}
-
-StatementNode *WheelParser::emit_error(
-    ParseErrorCode code
-) noexcept {
-    const auto *token = copy_token();
-    const auto error = make_parse_error(
-        code,
-        token,
-        token->kind,
-        m_lexer.get_source_location(*token)
-    );
-    m_errors.push_back(error);
-
-    synchronize_statement();
-    return m_arena.allocate<ErrorStatement>(token);
-}
-
-const Token *WheelParser::copy_token() const noexcept {
-    return m_arena.allocate<Token>(
-        m_current_token.kind,
-        m_current_token.str,
-        m_current_token.start,
-        m_current_token.end
-    );
 }
 
 ExpressionNode *WheelParser::parse_expression() noexcept {
@@ -88,11 +57,11 @@ ExpressionNode *WheelParser::parse_expression() noexcept {
         case TokenKind::FLOAT_LITERAL:
         case TokenKind::STRING_LITERAL:
         case TokenKind::RAW_STRING_LITERAL:
-            return m_arena.allocate<LiteralExpression>(copy_token());
+            return m_arena.allocate<LiteralExpression>(copy_token(m_arena, m_current_token));
             
         case TokenKind::IDENT:
             return m_arena.allocate<IdentifierExpression>(
-                copy_token(),
+                copy_token(m_arena, m_current_token),
                 m_interner.intern(m_current_token.str)
             );
         default:
@@ -100,71 +69,12 @@ ExpressionNode *WheelParser::parse_expression() noexcept {
     }
 }
 
-StatementNode *WheelParser::parse_variable_declaration() noexcept {
-    consume(m_lexer, m_current_token);
-    if (!keyword_matches(m_current_token, Keyword::Var)) {
-        return nullptr;
-    }
-
-    const auto start_token = copy_token();
-
-    skip_spaces();
-
-    if (!token_matches(m_current_token.kind, TokenKind::IDENT)) {
-        return emit_error(ParseErrorCode::ExpectedIdentifier);
-    }
-    const auto var_name = m_interner.intern(m_current_token.str);
-
-    skip_spaces();
-    if (!token_matches(m_current_token.kind, TokenKind::COLON)) {
-        return emit_error(ParseErrorCode::ExpectedColon);
-    }
-
-    skip_spaces();
-    if (!token_matches(m_current_token.kind, TokenKind::IDENT)) {
-        return emit_error(ParseErrorCode::ExpectedTypeKeyword);
-    }
-
-    BuiltinType builtin_type = BuiltinType::Int;
-    if (!type_keyword_matches(m_current_token, builtin_type)) {
-        return emit_error(ParseErrorCode::ExpectedTypeKeyword);
-    }
-
-    const auto var_type = m_builtins.type_symbol(builtin_type);
-
-    skip_spaces();
-    if (!token_matches(m_current_token.kind, TokenKind::EQUAL)) {
-        return emit_error(ParseErrorCode::ExpectedEqual);
-    }
-
-    skip_spaces();
-    switch (m_current_token.kind) {
-        case TokenKind::INT_LITERAL:
-        case TokenKind::FLOAT_LITERAL:
-        case TokenKind::STRING_LITERAL:
-        case TokenKind::RAW_STRING_LITERAL:
-            break;
-        default:
-            return emit_error(ParseErrorCode::ExpectedLiteral);
-    }
-
-    const auto literal_token = copy_token();
-    const auto literal = m_arena.allocate<LiteralExpression>(
-        literal_token
-    );
-
-    return m_arena.allocate<VariableDeclaration>(
-        start_token,
-        var_type, var_name, literal
-    );
-}
-
 StatementNode *WheelParser::parse_call_statement() noexcept {
     if (!token_matches(m_current_token.kind, TokenKind::IDENT)) {
         return nullptr;
     }
 
-    const auto start_token = copy_token();
+    const auto start_token = copy_token(m_arena, m_current_token);
     SymbolID callee = m_interner.intern(m_current_token.str);
 
     BuiltinFunction builtin_function = BuiltinFunction::Println;
@@ -172,23 +82,23 @@ StatementNode *WheelParser::parse_call_statement() noexcept {
         callee = m_builtins.function_symbol(builtin_function);
     }
 
-    skip_spaces();
+    skip_spaces(m_lexer, m_current_token);
     if (!token_matches(m_current_token.kind, TokenKind::LEFT_PARENT)) {
-        return emit_error(ParseErrorCode::ExpectedLeftParent);
+        // return emit_error(ParseErrorCode::ExpectedLeftParent);
     }
 
-    skip_spaces();
+    skip_spaces(m_lexer, m_current_token);
     std::vector<ExpressionNode *> arguments;
 
     if (!token_matches(m_current_token.kind, TokenKind::RIGHT_PARENT)) {
         while (true) {
             ExpressionNode *argument = parse_expression();
             if (argument == nullptr) {
-                return emit_error(ParseErrorCode::ExpectedExpression);
+                 // return emit_error(ParseErrorCode::ExpectedExpression);
             }
 
             arguments.push_back(argument);
-            skip_spaces();
+            skip_spaces(m_lexer, m_current_token);
 
             if (token_matches(m_current_token.kind, TokenKind::RIGHT_PARENT)) {
                 break;
@@ -196,16 +106,16 @@ StatementNode *WheelParser::parse_call_statement() noexcept {
 
             if (token_matches(m_current_token.kind, TokenKind::EOF_) ||
                 token_matches(m_current_token.kind, TokenKind::NEWLINE)) {
-                return emit_error(ParseErrorCode::ExpectedRightParent);
+                // return emit_error(ParseErrorCode::ExpectedRightParent);
             }
 
             if (!argument_separator_matches(m_current_token.kind)) {
-                return emit_error(ParseErrorCode::ExpectedArgumentSeparator);
+                // return emit_error(ParseErrorCode::ExpectedArgumentSeparator);
             }
 
-            skip_spaces();
+            skip_spaces(m_lexer, m_current_token);
             if (token_matches(m_current_token.kind, TokenKind::RIGHT_PARENT)) {
-                return emit_error(ParseErrorCode::ExpectedExpression);
+                // return emit_error(ParseErrorCode::ExpectedExpression);
             }
         }
     }
@@ -220,7 +130,11 @@ StatementNode *WheelParser::parse_call_statement() noexcept {
 }
 
 StatementNode *WheelParser::parse_statement() noexcept {
-    if (StatementNode *variable_declaration = parse_variable_declaration();
+    if (StatementNode *variable_declaration = parse_variable_declaration(ParserFuncContract{
+        m_lexer, m_arena, m_interner, ParserState {
+            m_current_token, m_errors
+        }
+    }, m_builtins);
         variable_declaration != nullptr) {
         return variable_declaration;
     }
@@ -257,7 +171,7 @@ void WheelParser::parse() noexcept {
                 continue;
             }
 
-            static_cast<void>(emit_error(ParseErrorCode::UnexpectedStatement));
+            // static_cast<void>(emit_error(ParseErrorCode::UnexpectedStatement));
         }
     }
 }
@@ -276,6 +190,11 @@ size_t WheelParser::statement_count() const noexcept {
 
 StatementNode *const *WheelParser::statements_data() const noexcept {
     return m_statements.data();
+}
+
+[[nodiscard]]
+Token *WheelParser::get_current_token() noexcept {
+    return &m_current_token;
 }
 
 void WheelParser::clear_errors() noexcept {
