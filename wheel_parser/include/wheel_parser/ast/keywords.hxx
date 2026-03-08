@@ -12,6 +12,7 @@ WHEEL_PARSER_AST_NAMESPACE
         Var,
         Int,
         String,
+        Function,
         Count
     };
 
@@ -22,12 +23,11 @@ WHEEL_PARSER_AST_NAMESPACE
     inline constexpr std::array<KeywordSpec, static_cast<size_t>(Keyword::Count)> k_keywords = {{
         {"var"},
         {"int"},
-        {"string"}
+        {"string"},
+        {"function"}
     }};
 
 
 WHEEL_PARSER_END_NAMESPACE
-
-
 
 #endif // KEYWORDS_HXX
