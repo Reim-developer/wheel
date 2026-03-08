@@ -24,7 +24,7 @@ class __CMakeBuildTarget(StrEnum):
 	PARSER_SYMBOL_INTERNER_TEST 			= "parser_symbol_interner_test"
 	PARSER_VARIABLE_DECLARATION_TEST 		= "parser_variable_declaration_test"
 	PARSER_AST_TEST 						= "parser_ast_test"
-	PARSER_CALL_STATEMENT					= "parser_call_statement_test"
+	PARSER_CALL_STATEMENT_TEST				= "parser_call_statement_test"
 
 	UTILS_NOT_NULL_TEST						= "utils_not_null_test"
 	MEMORY_SMALL_VEC_TEST 					= "memory_small_vec_test"
