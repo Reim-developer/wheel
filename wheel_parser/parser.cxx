@@ -15,9 +15,9 @@ using wheel_parser::WheelParser;
 using wheel_parser::ast::StatementNode;
 using wheel_parser::ast::LiteralExpression;
 using wheel_parser::ast::IdentifierExpression;
-using wheel_parser::ast::CallExpression;
+// using wheel_parser::ast::CallExpression;
 using wheel_parser::ast::ExpressionNode;
-using wheel_parser::ast::ExpressionStatement;
+// using wheel_parser::ast::ExpressionStatement;
 using wheel_parser::ast::BuiltinFunction;
 using wheel_parser::ast::SymbolID;
 using wheel_parser::ast::lookup_builtin_function;
@@ -120,13 +120,14 @@ StatementNode *WheelParser::parse_call_statement() noexcept {
         }
     }
 
-    auto *call_expression = m_arena.allocate<CallExpression>(
-        start_token,
-        callee,
-        std::move(arguments)
-    );
+    // auto *call_expression = m_arena.allocate<CallExpression>(
+    //     start_token,
+    //     callee,
+    //     std::move(arguments)
+    // );
 
-    return m_arena.allocate<ExpressionStatement>(start_token, call_expression);
+    return nullptr;
+    // return m_arena.allocate<ExpressionStatement>(start_token, call_expression);
 }
 
 StatementNode *WheelParser::parse_statement() noexcept {
