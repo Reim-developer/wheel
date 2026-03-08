@@ -13,7 +13,8 @@ WHEEL_PARSER_AST_NAMESPACE
     enum class BuiltinType : uint8_t {
         Int,
         String,
-        Count
+        Count,
+        ManualDeclaration
     };
 
     enum class BuiltinFunction : uint8_t {
@@ -50,6 +51,9 @@ WHEEL_PARSER_AST_NAMESPACE
                 case BuiltinType::String:
                     return string_type;
                 case BuiltinType::Count:
+                    break;
+
+                case BuiltinType::ManualDeclaration: 
                     break;
             }
 
@@ -108,10 +112,8 @@ WHEEL_PARSER_AST_NAMESPACE
         return false;
     }
 
-    [[nodiscard]] inline bool lookup_builtin_function(
-        std::string_view text,
-        BuiltinFunction &function
-    ) noexcept {
+    [[nodiscard]] inline bool lookup_builtin_function(std::string_view text, 
+                                                    BuiltinFunction &function) noexcept {
         for (const auto &spec : k_builtin_function_specs) {
             if (spec.text == text) {
                 function = spec.builtin;
