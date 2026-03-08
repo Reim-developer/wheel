@@ -21,6 +21,22 @@ WHEEL_PARSER_AST_NAMESPACE
         ErrorStatement
     };
 
+    [[nodiscard]]
+    constexpr const char* from_node_kind(NodeKind node_kind) noexcept {
+        using K = NodeKind;
+
+        switch (node_kind) {
+            case K::FunctionDeclaration:    return "FUNCTION_DECLARATION";
+            case K::BlockStatement:         return "BLOCK_STATEMENT";
+            case K::ExpressionStatement:    return "EXPRESSION_STATEMENT";
+            case K::LiteralExpression:      return "LITERAL_EXPRESSION";
+            case K::IdentifierExpression:   return "IDENTIFIER_EXPRESSION";
+            case K::CallExpression:         return "CALL_EXPRESSION";
+            case K::VariableDeclaration:    return "VARIABLE_DECLARATION";
+            case K::ErrorStatement:         return "ERROR_STATEMENT";
+        }
+    }
+
     struct Node {
         NodeKind node_kind;
         const Token *token;
