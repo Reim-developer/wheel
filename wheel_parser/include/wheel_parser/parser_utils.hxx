@@ -6,6 +6,7 @@
 #include "wheel_parser/ast/keywords.hxx"
 #include <wheel_lexer/lexer.hxx>
 #include <wheel_lexer/token.hxx>
+#include <wheel_memory/allocator.hxx>
 
 using wheel_lexer::Token;
 using wheel_lexer::Lexer;
@@ -14,6 +15,7 @@ using wheel_parser::ast::BuiltinType;
 using wheel_parser::ast::Keyword;
 using wheel_parser::ast::k_keywords;
 using wheel_parser::ast::lookup_builtin_type;
+using wheel_memory::Arena;
 
 WHEEL_PARSER_NAMESPACE
     inline void next_token(Lexer &lexer, Token &current_token) noexcept {
@@ -28,10 +30,12 @@ WHEEL_PARSER_NAMESPACE
         return consumed;
     } 
 
+    [[nodiscard]]
     inline bool token_matches(TokenKind current_kind, TokenKind expected_kind) noexcept {
         return current_kind == expected_kind;
     }
 
+    [[nodiscard]]
     inline bool keyword_matches(const Token &token, Keyword keyword) noexcept {
         if (!token_matches(token.kind, TokenKind::IDENT)) {
             return false;
@@ -40,6 +44,7 @@ WHEEL_PARSER_NAMESPACE
         return token.str == k_keywords[static_cast<size_t>(keyword)].text;
     }
 
+    [[nodiscard]]
     inline bool type_keyword_matches(const Token &token, BuiltinType &builtin_type) noexcept {
         if (!token_matches(token.kind, TokenKind::IDENT)) {
             return false;
@@ -50,6 +55,25 @@ WHEEL_PARSER_NAMESPACE
 
     inline bool argument_separator_matches(TokenKind token_kind) noexcept {
         return token_kind == TokenKind::COMMA || token_kind == TokenKind::DOT;
+    }
+
+    [[nodiscard]]
+    inline const Token *copy_token(Arena &arena, const Token &current_token) noexcept {
+        return arena.allocate<Token>(
+            current_token.kind,
+            current_token.str,
+            current_token.start,
+            current_token.end
+        );
+    }
+
+    inline void skip_spaces(Lexer &lexer, Token &current_token) noexcept {
+        while (true) {
+            consume(lexer, current_token);
+            if (current_token.kind != TokenKind::SPACE && current_token.kind != TokenKind::TAB) {
+                break;
+            }
+        }  
     }
 
 WHEEL_PARSER_END_NAMESPACE
