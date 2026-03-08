@@ -4,12 +4,29 @@
 #include <cstdint>
 #include <vector>
 #include <wheel_lexer/token.hxx>
+
+#if defined (WHEEL_EXPERIMENT) && defined (WHEEL_SMALL_VEC)
+    #include <wheel_memory/vec.hxx>
+#else 
+    #include <vector>
+#endif 
+
 #include "wheel_parser/config.hxx"
 #include "wheel_parser/ast/symbol.hxx"
 
 using wheel_lexer::Token;
 
 WHEEL_PARSER_AST_NAMESPACE
+     #if defined (WHEEL_EXPERIMENT) && defined (WHEEL_SMALL_VEC)
+        using wheel_memory::SmallVec;
+        template<typename T>
+        using ArgsVec = SmallVec<T>;
+
+    #else 
+        template<typename T>
+        using ArgsVec = std::vector<T>;
+    #endif 
+
     enum class NodeKind : uint8_t {
         FunctionDeclaration,
         BlockStatement,
@@ -95,12 +112,12 @@ WHEEL_PARSER_AST_NAMESPACE
 
     struct CallExpression final : ExpressionNode {
         SymbolID callee;
-        std::vector<ExpressionNode *> arguments;
+        ArgsVec<ExpressionNode*> arguments;
 
         explicit CallExpression(
             const Token *token,
             SymbolID callee,
-            std::vector<ExpressionNode *> arguments
+            ArgsVec<ExpressionNode *> arguments
         ) noexcept;
     };
 
