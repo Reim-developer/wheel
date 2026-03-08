@@ -33,6 +33,7 @@ WHEEL_PARSER_NAMESPACE
         ExpectedRightParent = 1009,
         ExpectedExpression  = 1010,
         ExpectedArgumentSeparator = 1011,
+        FunctionNameNotAllowed = 1012,
     };
 
     struct ParseErrorSpec {
@@ -41,7 +42,7 @@ WHEEL_PARSER_NAMESPACE
         const char *message;
     };
 
-    inline constexpr std::array<ParseErrorSpec, 11> k_parse_error_specs = {{
+    inline constexpr std::array<ParseErrorSpec, 12> k_parse_error_specs = {{
         {ParseErrorCode::ExpectedIdentifier, TokenKind::IDENT, "expected variable name after 'var'"},
         {ParseErrorCode::ExpectedColon, TokenKind::COLON, "expected ':' after variable name"},
         {ParseErrorCode::ExpectedType, TokenKind::IDENT, "expected type name after ':'"},
@@ -53,6 +54,7 @@ WHEEL_PARSER_NAMESPACE
         {ParseErrorCode::ExpectedRightParent, TokenKind::RIGHT_PARENT, "expected ')' to close argument list"},
         {ParseErrorCode::ExpectedExpression, TokenKind::IDENT, "expected expression argument"},
         {ParseErrorCode::ExpectedArgumentSeparator, TokenKind::COMMA, "expected ',' or '.' between call arguments"},
+        {ParseErrorCode::FunctionNameNotAllowed, TokenKind::IDENT, "definition function name duplicate with keyword name is not allowed in this context"}
     }};
 
     struct ParseError {
@@ -79,18 +81,18 @@ WHEEL_PARSER_NAMESPACE
 
     [[nodiscard]] constexpr const ParseErrorSpec& parse_error_spec(ParseErrorCode code) noexcept {
         switch (code) {
-            case ParseErrorCode::ExpectedIdentifier:  return k_parse_error_specs[0];
-            case ParseErrorCode::ExpectedColon:       return k_parse_error_specs[1];
-            case ParseErrorCode::ExpectedType:        return k_parse_error_specs[2];
-            case ParseErrorCode::ExpectedTypeKeyword: return k_parse_error_specs[3];
-            case ParseErrorCode::ExpectedEqual:       return k_parse_error_specs[4];
-            case ParseErrorCode::ExpectedLiteral:     return k_parse_error_specs[5];
-            case ParseErrorCode::UnexpectedStatement: return k_parse_error_specs[6];
-            case ParseErrorCode::ExpectedLeftParent:  return k_parse_error_specs[7];
-            case ParseErrorCode::ExpectedRightParent: return k_parse_error_specs[8];
-            case ParseErrorCode::ExpectedExpression:  return k_parse_error_specs[9];
-            case ParseErrorCode::ExpectedArgumentSeparator:
-                return k_parse_error_specs[10];
+            case ParseErrorCode::ExpectedIdentifier:        return k_parse_error_specs[0];
+            case ParseErrorCode::ExpectedColon:             return k_parse_error_specs[1];
+            case ParseErrorCode::ExpectedType:              return k_parse_error_specs[2];
+            case ParseErrorCode::ExpectedTypeKeyword:       return k_parse_error_specs[3];
+            case ParseErrorCode::ExpectedEqual:             return k_parse_error_specs[4];
+            case ParseErrorCode::ExpectedLiteral:           return k_parse_error_specs[5];
+            case ParseErrorCode::UnexpectedStatement:       return k_parse_error_specs[6];
+            case ParseErrorCode::ExpectedLeftParent:        return k_parse_error_specs[7];
+            case ParseErrorCode::ExpectedRightParent:       return k_parse_error_specs[8];
+            case ParseErrorCode::ExpectedExpression:        return k_parse_error_specs[9];
+            case ParseErrorCode::ExpectedArgumentSeparator: return k_parse_error_specs[10];
+            case ParseErrorCode::FunctionNameNotAllowed:    return k_parse_error_specs[11];
         }
 
         return k_parse_error_specs[0];
