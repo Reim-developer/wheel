@@ -68,11 +68,8 @@ WHEEL_PARSER_NAMESPACE
     }
 
     inline void skip_spaces(Lexer &lexer, Token &current_token) noexcept {
-        while (true) {
-            consume(lexer, current_token);
-            if (current_token.kind != TokenKind::SPACE && current_token.kind != TokenKind::TAB) {
-                break;
-            }
+        while (current_token.kind != TokenKind::SPACE && current_token.kind != TokenKind::TAB) {
+            next_token(lexer, current_token);
         }  
     }
 
