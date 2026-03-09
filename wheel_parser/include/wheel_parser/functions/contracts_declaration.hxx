@@ -13,13 +13,14 @@ using wheel_lexer::Token;
 using wheel_parser::ast::StringInterner;
 
 WHEEL_PARSER_FUNCTIONS_BEGIN_NAMESPACE
-    #define ERROR_CONTEXT(code) EmitErrorConfig { \
+    #define ERROR_CONTEXT(code, error_message) EmitErrorConfig { \
         code, \
         contract.state.error_list, &contract.state.current_token, \
         contract.state.current_token.kind, \
         contract.lexer.get_source_location(contract.state.current_token), \
         contract.arena, \
-        contract.state.current_token, contract.lexer \
+        contract.state.current_token, contract.lexer, \
+        error_message \
     }
     #define PARSE_BEGIN(func_name, return_type, ...) inline return_type* func_name(ParserFuncContract contract, __VA_ARGS__) noexcept {
     #define PARSE_END }
