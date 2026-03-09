@@ -30,18 +30,18 @@ WHEEL_PARSER_FUNCTIONS_BEGIN_NAMESPACE
         skip_spaces(contract.lexer, contract.state.current_token);
 
         if (!token_matches(contract.state.current_token.kind, TokenKind::IDENT)) {
-            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedIdentifier));
+            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedIdentifier, ""));
         }
         const auto var_name = contract.interner.intern(contract.state.current_token.str);
 
         skip_spaces(contract.lexer, contract.state.current_token);
         if (!token_matches(contract.state.current_token.kind, TokenKind::COLON)) {
-            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedColon));
+            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedColon, ""));
         }
 
         skip_spaces(contract.lexer, contract.state.current_token);
         if (!token_matches(contract.state.current_token.kind, TokenKind::IDENT)) {
-            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedTypeKeyword));
+            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedTypeKeyword, ""));
         }
 
         BuiltinType builtin_type;
@@ -53,7 +53,7 @@ WHEEL_PARSER_FUNCTIONS_BEGIN_NAMESPACE
 
         skip_spaces(contract.lexer, contract.state.current_token);
         if (!token_matches(contract.state.current_token.kind, TokenKind::EQUAL)) {
-            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedEqual));
+            return emit_error(ERROR_CONTEXT(ParseErrorCode::ExpectedEqual, ""));
         }
 
         skip_spaces(contract.lexer, contract.state.current_token);
