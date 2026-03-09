@@ -7,3 +7,4 @@ cfg.json
 .cache
 compile_commands.json
 playground
+tmp
