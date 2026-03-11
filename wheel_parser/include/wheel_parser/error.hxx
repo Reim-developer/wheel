@@ -1,11 +1,10 @@
 #if !defined(PARSER_ERROR_HXX)
 #define PARSER_ERROR_HXX
-
-#include <array>
 #include <cstdint>
 #include <format>
 #include <string>
 #include <string_view>
+#include <string>
 
 #if !defined (WHEEL_EXPERIMENT) && !defined (WHEEL_SMALL_VEC)
     #include <vector>
@@ -22,38 +21,27 @@ using wheel_lexer::TokenKind;
 
 WHEEL_PARSER_NAMESPACE
     enum class ParseErrorCode : uint16_t {
-        ExpectedIdentifier  = 1001,
-        ExpectedColon       = 1002,
-        ExpectedType        = 1003,
-        ExpectedEqual       = 1004,
-        ExpectedLiteral     = 1005,
-        UnexpectedStatement = 1006,
-        ExpectedTypeKeyword = 1007,
-        ExpectedLeftParent  = 1008,
-        ExpectedRightParent = 1009,
-        ExpectedExpression  = 1010,
-        ExpectedArgumentSeparator = 1011,
-    };
+        ExpectedIdentifier              = 1001,
+        ExpectedColon                   = 1002,
+        ExpectedType                    = 1003,
+        ExpectedEqual                   = 1004,
+        ExpectedLiteral                 = 1005,
+        UnexpectedStatement             = 1006,
+        ExpectedTypeKeyword             = 1007,
+        ExpectedLeftParent              = 1008,
+        ExpectedRightParent             = 1009,
+        ExpectedExpression              = 1010,
+        ExpectedArgumentSeparator       = 1011,
 
-    struct ParseErrorSpec {
-        ParseErrorCode code;
-        TokenKind expected;
-        const char *message;
+        ExpectedFunctionName            = 1012,
+        ExpectedFunctionKeyword         = 1013,
+        ExpectedIdentifierAfterFunction = 1014,
+        ExpectedParameterList           = 1015,
+        ExpectedReturnType              = 1016,
+        ExpectedFunctionBody            = 1017,
+        ExpectedFunctionArgs            = 1018,
+        ExpectedFunctionArgsType        = 1019
     };
-
-    inline constexpr std::array<ParseErrorSpec, 11> k_parse_error_specs = {{
-        {ParseErrorCode::ExpectedIdentifier, TokenKind::IDENT, "expected variable name after 'var'"},
-        {ParseErrorCode::ExpectedColon, TokenKind::COLON, "expected ':' after variable name"},
-        {ParseErrorCode::ExpectedType, TokenKind::IDENT, "expected type name after ':'"},
-        {ParseErrorCode::ExpectedTypeKeyword, TokenKind::IDENT, "expected type keyword annotation after ':' (e.g. int)"},
-        {ParseErrorCode::ExpectedEqual, TokenKind::EQUAL, "expected '=' after type"},
-        {ParseErrorCode::ExpectedLiteral, TokenKind::INT_LITERAL, "expected literal initializer"},
-        {ParseErrorCode::UnexpectedStatement, TokenKind::IDENT, "unexpected token at statement start"},
-        {ParseErrorCode::ExpectedLeftParent, TokenKind::LEFT_PARENT, "expected '(' after call target"},
-        {ParseErrorCode::ExpectedRightParent, TokenKind::RIGHT_PARENT, "expected ')' to close argument list"},
-        {ParseErrorCode::ExpectedExpression, TokenKind::IDENT, "expected expression argument"},
-        {ParseErrorCode::ExpectedArgumentSeparator, TokenKind::COMMA, "expected ',' or '.' between call arguments"},
-    }};
 
     struct ParseError {
         ParseErrorCode   code;
@@ -61,7 +49,7 @@ WHEEL_PARSER_NAMESPACE
         TokenKind        expected;
         TokenKind        actual;
         SourceLocation   location;
-        const char       *message;
+        std::string      message;
     };
 
     struct ParseDiagnostic {
@@ -77,39 +65,21 @@ WHEEL_PARSER_NAMESPACE
         using ParseDiagnosticList = std::vector<ParseDiagnostic>;
     #endif
 
-    [[nodiscard]] constexpr const ParseErrorSpec& parse_error_spec(ParseErrorCode code) noexcept {
-        switch (code) {
-            case ParseErrorCode::ExpectedIdentifier:  return k_parse_error_specs[0];
-            case ParseErrorCode::ExpectedColon:       return k_parse_error_specs[1];
-            case ParseErrorCode::ExpectedType:        return k_parse_error_specs[2];
-            case ParseErrorCode::ExpectedTypeKeyword: return k_parse_error_specs[3];
-            case ParseErrorCode::ExpectedEqual:       return k_parse_error_specs[4];
-            case ParseErrorCode::ExpectedLiteral:     return k_parse_error_specs[5];
-            case ParseErrorCode::UnexpectedStatement: return k_parse_error_specs[6];
-            case ParseErrorCode::ExpectedLeftParent:  return k_parse_error_specs[7];
-            case ParseErrorCode::ExpectedRightParent: return k_parse_error_specs[8];
-            case ParseErrorCode::ExpectedExpression:  return k_parse_error_specs[9];
-            case ParseErrorCode::ExpectedArgumentSeparator:
-                return k_parse_error_specs[10];
-        }
-
-        return k_parse_error_specs[0];
-    }
-
     [[nodiscard]] inline ParseError make_parse_error(
         ParseErrorCode code,
         const Token *token,
         TokenKind actual,
-        SourceLocation location
+        SourceLocation location,
+        std::string message = {},
+        TokenKind expected = TokenKind::IDENT
     ) noexcept {
-        const auto &spec = parse_error_spec(code);
         return ParseError {
             code,
             token,
-            spec.expected,
+            expected,
             actual,
             location,
-            spec.message
+            std::move(message)
         };
     }
 

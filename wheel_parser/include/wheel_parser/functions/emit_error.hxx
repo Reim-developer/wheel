@@ -10,6 +10,7 @@
 #include <wheel_lexer/kind.hxx>
 #include <wheel_lexer/source_map.hxx>
 #include <wheel_memory/allocator.hxx>
+#include <string>
 
 using wheel_parser::ast::StatementNode;
 using wheel_parser::ast::ErrorStatement;
@@ -29,6 +30,7 @@ WHEEL_PARSER_FUNCTIONS_BEGIN_NAMESPACE
         Arena &arena;
         Token &current_token;
         Lexer &lexer;
+        std::string message = {};
     };
 
     inline StatementNode *emit_error(EmitErrorConfig config) noexcept {
@@ -37,7 +39,8 @@ WHEEL_PARSER_FUNCTIONS_BEGIN_NAMESPACE
             config.code,
             token,
             token->kind,
-            config.lexer.get_source_location(*token)
+            config.lexer.get_source_location(*token),
+            std::move(config.message.empty() ? "Parser error" : config.message)
         );
         config.error_list.push_back(error);
 

@@ -90,7 +90,7 @@ IdentifierExpression::IdentifierExpression(const Token *token,
 CallExpression::CallExpression(
     const Token *token,
     SymbolID callee,
-    std::vector<ExpressionNode *> arguments
+    ArgsVec<ExpressionNode*> arguments
 ) noexcept :
         ExpressionNode(NodeKind::CallExpression, token),
         callee(callee),

@@ -68,12 +68,30 @@ WHEEL_PARSER_NAMESPACE
     }
 
     inline void skip_spaces(Lexer &lexer, Token &current_token) noexcept {
-        while (true) {
-            consume(lexer, current_token);
-            if (current_token.kind != TokenKind::SPACE && current_token.kind != TokenKind::TAB) {
-                break;
-            }
+        while (current_token.kind != TokenKind::SPACE && current_token.kind != TokenKind::TAB) {
+            next_token(lexer, current_token);
         }  
+    }
+
+    [[nodiscard]]
+    inline constexpr const bool matches_any_keywords(const Token &token) {
+        if (!token_matches(token.kind, TokenKind::IDENT)) {
+            return false;
+        }
+
+        for (size_t index = 0; index < static_cast<size_t>(Keyword::Count); ++index) {
+            if (token.str == k_keywords[index].text) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    template<typename ... Keywords>
+    [[nodiscard]]
+    inline constexpr const bool matches_any_keywords(const Token &token, Keywords... keywords) {
+        return (keyword_matches(token, keywords) || ... );
     }
 
 WHEEL_PARSER_END_NAMESPACE

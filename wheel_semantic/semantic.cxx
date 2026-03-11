@@ -176,7 +176,10 @@ bool SemanticAnalyzer::resolve_type(SymbolID type_symbol, ValueKind &type_kind) 
             return true;
         case wheel_parser::ast::BuiltinType::Count:
             break;
-    }
+
+        case wheel_parser::ast::BuiltinType::ManualDeclaration:
+            break;
+        }
 
     return false;
 }
@@ -335,7 +338,7 @@ bool SemanticAnalyzer::analyze_call_expression(
         return false;
     }
 
-    const ExpressionNode *format_expression = expression->arguments[0];
+    const ExpressionNode *format_expression = expression->arguments.data()[0];
     if (format_expression == nullptr || format_expression->token == nullptr ||
         format_expression->node_kind != NodeKind::LiteralExpression) {
         push_error(SemanticErrorCode::InvalidFormatString, statement_token);
@@ -370,7 +373,7 @@ bool SemanticAnalyzer::analyze_call_expression(
     for (size_t index = 1; index < argument_count; ++index) {
         Operand runtime_argument = Operand::from_constant(nullptr, Value::from_int(0));
         ValueKind argument_type = ValueKind::Int;
-        if (!build_operand(expression->arguments[index], runtime_argument, argument_type)) {
+        if (!build_operand(expression->arguments.data()[index], runtime_argument, argument_type)) {
             return false;
         }
 
